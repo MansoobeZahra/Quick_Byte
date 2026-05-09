@@ -83,7 +83,7 @@
                             <asp:BoundField DataField="Deliveries" HeaderText="Deliveries" />
                             <asp:TemplateField HeaderText="Availability">
                                 <ItemTemplate>
-                                    <%# If(Convert.ToBoolean(Eval("Availability")), "🟢 Available", "🔴 Offline") %>
+                                    <%# If(Convert.ToBoolean(Eval("Availability")), "Available", "Offline") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
