@@ -50,24 +50,32 @@
                 <p class="subtitle">Find your favorite food</p>
 
                 <div class="search-box">
-                    <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by Restaurant, Menu Item..." CssClass="search-input"></asp:TextBox>
+                    <p style="text-align: center; color: #ba1010; font-weight: bold;">
+                        Showing restaurants in: <asp:Label ID="lblUserRegion" runat="server"></asp:Label>
+                    </p>
+                    <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by Menu Item..." CssClass="search-input"></asp:TextBox>
                     <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn-search" OnClick="btnSearch_Click" />
                 </div>
 
                 <div class="results-section">
-                    <h2>Search Results</h2>
+                    <h2>Available Food Near You</h2>
                     
-                    <asp:Label ID="lblMessage" runat="server" ForeColor="Red" Visible="false"></asp:Label>
+                    <asp:Label ID="lblMessage" runat="server" ForeColor="Green" Visible="false" style="display:block; margin-bottom:10px; font-weight:bold;"></asp:Label>
 
-                    <asp:GridView ID="gvResults" runat="server" AutoGenerateColumns="False" CssClass="results-table" GridLines="None">
+                    <asp:GridView ID="gvResults" runat="server" AutoGenerateColumns="False" CssClass="results-table" GridLines="None" DataKeyNames="ItemID,RestaurantID" OnRowCommand="gvResults_RowCommand">
                         <Columns>
                             <asp:BoundField DataField="ItemName" HeaderText="Menu Item" />
                             <asp:BoundField DataField="RestaurantName" HeaderText="Restaurant" />
-                            <asp:BoundField DataField="Price" HeaderText="Price (Rs.)" DataFormatString="{0:C}" />
+                            <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="{0:C}" />
                             <asp:BoundField DataField="Description" HeaderText="Description" />
+                            <asp:TemplateField HeaderText="Action">
+                                <ItemTemplate>
+                                    <asp:Button ID="btnOrder" runat="server" Text="Order Now" CommandName="Order" CommandArgument='<%# Container.DataItemIndex %>' CssClass="btn-search" style="padding: 5px 15px; font-size: 0.8rem;" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
                         </Columns>
                         <EmptyDataTemplate>
-                            <div class="no-results">No results to display. Please perform a search.</div>
+                            <div class="no-results">No results in your region. Try searching for something else!</div>
                         </EmptyDataTemplate>
                     </asp:GridView>
                 </div>
