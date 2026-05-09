@@ -49,26 +49,19 @@
                 </div>
             </nav>
 
-            <div class="container" style="max-width: 1200px;">
-                <div class="search-wrapper" style="background:transparent; padding:0; box-shadow:none;">
+            <div class="container">
+                <div class="search-wrapper" style="background:transparent; padding:0; border:none;">
                     <img src="assets/logo.png" alt="QuickByte Logo" class="brand-logo" />
-                    <h1 style="color: #ba1010; font-size: 2.5rem; margin-bottom: 5px;">Business Segmentation Dashboard
-                    </h1>
-                    <p class="subtitle" style="margin-bottom: 30px;">Network-wide stakeholder analytics & logistics</p>
+                    <h1>Business Segmentation Dashboard</h1>
+                    <p class="subtitle">Network-wide stakeholder analytics & logistics</p>
 
                     <!-- Admin Only: Add Restaurant -->
                     <div class="stat-card full-width" style="margin-bottom: 30px; border: 1px solid #eee;">
-                        <h2
-                            style="background: #fcf8ec; padding: 10px; margin: -20px -20px 20px -20px; border-radius: 10px 10px 0 0;">
-                            Add New Restaurant Partner</h2>
-                        <div
-                            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                            <asp:TextBox ID="txtNewRestName" runat="server" placeholder="Restaurant Name"
-                                CssClass="form-input"></asp:TextBox>
-                            <asp:TextBox ID="txtNewRestEmail" runat="server" placeholder="Manager Email"
-                                CssClass="form-input"></asp:TextBox>
-                            <asp:TextBox ID="txtNewRestPhone" runat="server" placeholder="Contact Number"
-                                CssClass="form-input"></asp:TextBox>
+                        <h2 style="background: #fcf8ec; padding: 10px; margin: -20px -20px 20px -20px;">Add New Restaurant Partner</h2>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <asp:TextBox ID="txtNewRestName" runat="server" placeholder="Restaurant Name" CssClass="form-input"></asp:TextBox>
+                            <asp:TextBox ID="txtNewRestEmail" runat="server" placeholder="Manager Email" CssClass="form-input"></asp:TextBox>
+                            <asp:TextBox ID="txtNewRestPhone" runat="server" placeholder="Contact Number" CssClass="form-input"></asp:TextBox>
                             <asp:DropDownList ID="ddlNewRestRegion" runat="server" CssClass="form-input">
                                 <asp:ListItem Value="" Text="Select City/Region"></asp:ListItem>
                                 <asp:ListItem Value="Karachi" Text="Karachi"></asp:ListItem>
@@ -76,27 +69,22 @@
                                 <asp:ListItem Value="Islamabad" Text="Islamabad"></asp:ListItem>
                                 <asp:ListItem Value="Rawalpindi" Text="Rawalpindi"></asp:ListItem>
                             </asp:DropDownList>
-                            <asp:TextBox ID="txtNewRestAddress" runat="server" placeholder="Street Address"
-                                CssClass="form-input"></asp:TextBox>
-                            <asp:Button ID="btnAddRestaurant" runat="server" Text="Register Restaurant"
-                                CssClass="btn-add" style="background:#ba1010;" OnClick="btnAddRestaurant_Click" />
+                            <asp:TextBox ID="txtNewRestAddress" runat="server" placeholder="Street Address" CssClass="form-input"></asp:TextBox>
+                            <asp:Button ID="btnAddRestaurant" runat="server" Text="Register Restaurant" CssClass="btn-add" OnClick="btnAddRestaurant_Click" />
                         </div>
-                        <asp:Label ID="lblAdminMessage" runat="server" ForeColor="Green" Visible="false"
-                            style="display:block; margin-top:10px; font-weight:bold;"></asp:Label>
+                        <asp:Label ID="lblAdminMessage" runat="server" ForeColor="Green" Visible="false" style="display:block; margin-top:10px; font-weight:bold;"></asp:Label>
                     </div>
 
                     <div class="dashboard-grid">
                         <!-- Customers Segmentation -->
                         <div class="stat-card full-width">
                             <h2>Customer Segmentation</h2>
-                            <asp:GridView ID="gvCustomerSegments" runat="server" AutoGenerateColumns="False"
-                                CssClass="admin-table" GridLines="None">
+                            <asp:GridView ID="gvCustomerSegments" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None">
                                 <Columns>
                                     <asp:BoundField DataField="CustomerName" HeaderText="Customer" />
                                     <asp:BoundField DataField="Region" HeaderText="Region" />
                                     <asp:BoundField DataField="TotalOrders" HeaderText="Orders" />
-                                    <asp:BoundField DataField="TotalSpent" HeaderText="Total Spent"
-                                        DataFormatString="{0:C}" />
+                                    <asp:BoundField DataField="TotalSpent" HeaderText="Total Spent" DataFormatString="{0:C}" />
                                     <asp:TemplateField HeaderText="Segment">
                                         <ItemTemplate>
                                             <span class='<%# GetSegmentClass(Eval("Segment")) %>'>
@@ -111,40 +99,28 @@
                         <!-- Restaurants Performance -->
                         <div class="stat-card full-width">
                             <h2>Restaurant Revenue & Account Status</h2>
-                            <asp:GridView ID="gvRestaurants" runat="server" AutoGenerateColumns="False"
-                                CssClass="admin-table" GridLines="None" DataKeyNames="RestaurantID"
-                                OnRowCommand="gvRestaurants_RowCommand">
+                            <asp:GridView ID="gvRestaurants" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None" DataKeyNames="RestaurantID" OnRowCommand="gvRestaurants_RowCommand">
                                 <Columns>
                                     <asp:BoundField DataField="Name" HeaderText="Restaurant" />
                                     <asp:BoundField DataField="Region" HeaderText="Region" />
                                     <asp:BoundField DataField="OrderCount" HeaderText="Orders" />
-                                    <asp:BoundField DataField="Revenue" HeaderText="Current Revenue"
-                                        DataFormatString="{0:C}" />
+                                    <asp:BoundField DataField="Revenue" HeaderText="Current Revenue" DataFormatString="{0:C}" />
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
-                                            <b style="color:#f8be2c;">
-                                                <%# Eval("AvgRating", "{0:F1}" ) %> ●
-                                            </b>
+                                            <b style="color:#f8be2c;"><%# Eval("AvgRating", "{0:F1}") %></b>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Status">
                                         <ItemTemplate>
-                                            <span
-                                                class='<%# If(Convert.ToBoolean(Eval("IsActive")), "status-active", "status-disabled") %>'>
-                                                <%# If(Convert.ToBoolean(Eval("IsActive")), "Active" , "Disabled" ) %>
+                                            <span class='<%# If(Convert.ToBoolean(Eval("IsActive")), "status-active", "status-disabled") %>'>
+                                                <%# If(Convert.ToBoolean(Eval("IsActive")), "Active", "Disabled") %>
                                             </span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Actions">
                                         <ItemTemplate>
-                                            <asp:Button ID="btnToggleRest" runat="server"
-                                                Text='<%# If(Convert.ToBoolean(Eval("IsActive")), "Disable", "Enable") %>'
-                                                CommandName="ToggleStatus" CommandArgument='<%# Eval("RestaurantID") %>'
-                                                CssClass="btn-view" style="padding:4px 8px; font-size:0.75rem;" />
-                                            <asp:Button ID="btnResetRest" runat="server" Text="Reset Revenue"
-                                                CommandName="ResetRevenue" CommandArgument='<%# Eval("RestaurantID") %>'
-                                                CssClass="btn-reset" style="padding:4px 8px; font-size:0.75rem;"
-                                                OnClientClick="return confirm('Clear revenue for this restaurant?');" />
+                                            <asp:Button ID="btnToggleRest" runat="server" Text='<%# If(Convert.ToBoolean(Eval("IsActive")), "Disable", "Enable") %>' CommandName="ToggleStatus" CommandArgument='<%# Eval("RestaurantID") %>' CssClass="btn-view" style="padding:4px 8px; font-size:0.75rem;" />
+                                            <asp:Button ID="btnResetRest" runat="server" Text="Reset Revenue" CommandName="ResetRevenue" CommandArgument='<%# Eval("RestaurantID") %>' CssClass="btn-reset" style="padding:4px 8px; font-size:0.75rem;" OnClientClick="return confirm('Clear revenue for this restaurant?');" />
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
@@ -154,41 +130,28 @@
                         <!-- Riders Activity -->
                         <div class="stat-card full-width">
                             <h2>Rider Earnings & Dispatch Status</h2>
-                            <asp:GridView ID="gvRiders" runat="server" AutoGenerateColumns="False"
-                                CssClass="admin-table" GridLines="None" DataKeyNames="RiderID"
-                                OnRowCommand="gvRiders_RowCommand">
+                            <asp:GridView ID="gvRiders" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None" DataKeyNames="RiderID" OnRowCommand="gvRiders_RowCommand">
                                 <Columns>
                                     <asp:BoundField DataField="Name" HeaderText="Rider" />
                                     <asp:BoundField DataField="Region" HeaderText="Region" />
                                     <asp:BoundField DataField="Deliveries" HeaderText="Deliveries" />
-                                    <asp:BoundField DataField="Revenue" HeaderText="Earnings"
-                                        DataFormatString="{0:C}" />
+                                    <asp:BoundField DataField="Revenue" HeaderText="Earnings" DataFormatString="{0:C}" />
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
-                                            <b style="color:#f8be2c;">
-                                                <%# Eval("AvgRating", "{0:F1}" ) %> ●
-                                            </b>
+                                            <b style="color:#f8be2c;"><%# Eval("AvgRating", "{0:F1}") %></b>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Availability">
                                         <ItemTemplate>
-                                            <span
-                                                class='<%# "badge " & If(Convert.ToBoolean(Eval("Availability")), "badge-available", "badge-offline") %>'>
-                                                <%# If(Convert.ToBoolean(Eval("Availability")), "Available" , "Offline"
-                                                    ) %>
+                                            <span class='<%# "badge " & If(Convert.ToBoolean(Eval("Availability")), "badge-available", "badge-offline") %>'>
+                                                <%# If(Convert.ToBoolean(Eval("Availability")), "Available", "Offline") %>
                                             </span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Actions">
                                         <ItemTemplate>
-                                            <asp:Button ID="btnToggleRider" runat="server"
-                                                Text='<%# If(Convert.ToBoolean(Eval("IsActive")), "Disable", "Enable") %>'
-                                                CommandName="ToggleStatus" CommandArgument='<%# Eval("RiderID") %>'
-                                                CssClass="btn-view" style="padding:4px 8px; font-size:0.75rem;" />
-                                            <asp:Button ID="btnResetRider" runat="server" Text="Reset Earnings"
-                                                CommandName="ResetRevenue" CommandArgument='<%# Eval("RiderID") %>'
-                                                CssClass="btn-reset" style="padding:4px 8px; font-size:0.75rem;"
-                                                OnClientClick="return confirm('Clear earnings for this rider?');" />
+                                            <asp:Button ID="btnToggleRider" runat="server" Text='<%# If(Convert.ToBoolean(Eval("IsActive")), "Disable", "Enable") %>' CommandName="ToggleStatus" CommandArgument='<%# Eval("RiderID") %>' CssClass="btn-view" style="padding:4px 8px; font-size:0.75rem;" />
+                                            <asp:Button ID="btnResetRider" runat="server" Text="Reset Earnings" CommandName="ResetRevenue" CommandArgument='<%# Eval("RiderID") %>' CssClass="btn-reset" style="padding:4px 8px; font-size:0.75rem;" OnClientClick="return confirm('Clear earnings for this rider?');" />
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
@@ -198,15 +161,13 @@
                         <!-- Stakeholder Feedback -->
                         <div class="stat-card full-width" style="border-top: 2px solid #ba1010; margin-top: 20px;">
                             <h2 style="color:#ba1010;">Stakeholder Ratings & Reviews</h2>
-                            <asp:GridView ID="gvFeedback" runat="server" AutoGenerateColumns="False"
-                                CssClass="admin-table" GridLines="None">
+                            <asp:GridView ID="gvFeedback" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None">
                                 <Columns>
                                     <asp:BoundField DataField="TargetName" HeaderText="Rated Entity" />
                                     <asp:BoundField DataField="TargetType" HeaderText="Role" />
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
-                                            <span
-                                                class='<%# "badge " & If(Convert.ToInt32(Eval("Rating")) >= 4, "badge-high", "badge-low") %>'>
+                                            <span class='<%# "badge " & If(Convert.ToInt32(Eval("Rating")) >= 4, "badge-high", "badge-low") %>'>
                                                 <%# Eval("Rating") %> / 5
                                             </span>
                                         </ItemTemplate>
@@ -222,13 +183,11 @@
                         </div>
                     </div>
                 </div>
-
             </form>
             <footer>
                 <p>&copy; 2026 QUICK byte | Taste the speed</p>
                 <p>Internet application development</p>
                 <p>Mansoob-e-Zahra</p>
             </footer>
-
-    </html>    </body>
-</html>
+        </body>
+    </html>
