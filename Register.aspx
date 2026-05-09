@@ -51,8 +51,18 @@
                     <asp:DropDownList ID="ddlUserType" runat="server" onchange="toggleFields()" required="required">
                         <asp:ListItem Value="" Text="Select Role"></asp:ListItem>
                         <asp:ListItem Value="Customer" Text="Customer"></asp:ListItem>
-                        <asp:ListItem Value="RestaurantManager" Text="Restaurant Manager"></asp:ListItem>
                         <asp:ListItem Value="Rider" Text="Delivery Rider"></asp:ListItem>
+                    </asp:DropDownList>
+                </div>
+
+                <div class="form-group">
+                    <label for="ddlRegion">Select Region/City:</label>
+                    <asp:DropDownList ID="ddlRegion" runat="server" required="required">
+                        <asp:ListItem Value="" Text="Select Region"></asp:ListItem>
+                        <asp:ListItem Value="Karachi" Text="Karachi"></asp:ListItem>
+                        <asp:ListItem Value="Lahore" Text="Lahore"></asp:ListItem>
+                        <asp:ListItem Value="Islamabad" Text="Islamabad"></asp:ListItem>
+                        <asp:ListItem Value="Rawalpindi" Text="Rawalpindi"></asp:ListItem>
                     </asp:DropDownList>
                 </div>
 
@@ -85,22 +95,6 @@
                 <div class="form-group">
                     <label for="txtConfirmPassword">Confirm Password:</label>
                     <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" required="required"></asp:TextBox>
-                </div>
-
-                <!-- Restaurant-specific Fields -->
-                <div id="restaurantFields" style="display:none;">
-                    <div class="form-group">
-                        <label for="txtRestaurantName">Restaurant Name:</label>
-                        <asp:TextBox ID="txtRestaurantName" runat="server"></asp:TextBox>
-                    </div>
-                    <div class="form-group">
-                        <label for="txtStreet">Street Address:</label>
-                        <asp:TextBox ID="txtStreet" runat="server"></asp:TextBox>
-                    </div>
-                    <div class="form-group">
-                        <label for="txtCity">City:</label>
-                        <asp:TextBox ID="txtCity" runat="server"></asp:TextBox>
-                    </div>
                 </div>
 
                 <!-- Rider-specific Fields -->

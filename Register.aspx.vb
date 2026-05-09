@@ -15,6 +15,12 @@ Partial Class Register
             Return
         End If
 
+        Dim region As String = ddlRegion.SelectedValue
+        If String.IsNullOrEmpty(region) Then
+            ShowMessage("Please select a region.")
+            Return
+        End If
+
         Dim email As String = txtEmail.Text.Trim()
         Dim password As String = txtPassword.Text
         Dim phone As String = txtPhone.Text.Trim()
@@ -40,42 +46,35 @@ Partial Class Register
                 Dim newRefId As Integer = 0
 
                 If role = "Customer" Then
-                    Dim insertCust As String = "INSERT INTO Customer_QB (FirstName, LastName, Email, PhoneNumber) OUTPUT INSERTED.CustomerID VALUES (@FirstName, @LastName, @Email, @Phone)"
+                    Dim insertCust As String = "INSERT INTO Customer_QB (FirstName, LastName, Email, PhoneNumber, Region) OUTPUT INSERTED.CustomerID VALUES (@FirstName, @LastName, @Email, @Phone, @Region)"
                     Using cmd As New SqlCommand(insertCust, conn, transaction)
                         cmd.Parameters.AddWithValue("@FirstName", txtFirstName.Text.Trim())
                         cmd.Parameters.AddWithValue("@LastName", txtLastName.Text.Trim())
                         cmd.Parameters.AddWithValue("@Email", email)
                         cmd.Parameters.AddWithValue("@Phone", phone)
-                        newRefId = Convert.ToInt32(cmd.ExecuteScalar())
-                    End Using
-
-                Else If role = "RestaurantManager" Then
-                    Dim insertRest As String = "INSERT INTO Restaurant_QB (Name, Street, City, ContactNumber) OUTPUT INSERTED.RestaurantID VALUES (@Name, @Street, @City, @ContactNumber)"
-                    Using cmd As New SqlCommand(insertRest, conn, transaction)
-                        cmd.Parameters.AddWithValue("@Name", txtRestaurantName.Text.Trim())
-                        cmd.Parameters.AddWithValue("@Street", txtStreet.Text.Trim())
-                        cmd.Parameters.AddWithValue("@City", txtCity.Text.Trim())
-                        cmd.Parameters.AddWithValue("@ContactNumber", phone)
+                        cmd.Parameters.AddWithValue("@Region", region)
                         newRefId = Convert.ToInt32(cmd.ExecuteScalar())
                     End Using
 
                 Else If role = "Rider" Then
-                    Dim insertRider As String = "INSERT INTO Rider_QB (Name, ContactNumber, Availability) OUTPUT INSERTED.RiderID VALUES (@Name, @ContactNumber, @Availability)"
+                    Dim insertRider As String = "INSERT INTO Rider_QB (Name, ContactNumber, Availability, Region) OUTPUT INSERTED.RiderID VALUES (@Name, @ContactNumber, @Availability, @Region)"
                     Using cmd As New SqlCommand(insertRider, conn, transaction)
                         cmd.Parameters.AddWithValue("@Name", txtFirstName.Text.Trim() & " " & txtLastName.Text.Trim())
                         cmd.Parameters.AddWithValue("@ContactNumber", phone)
                         cmd.Parameters.AddWithValue("@Availability", chkAvailability.Checked)
+                        cmd.Parameters.AddWithValue("@Region", region)
                         newRefId = Convert.ToInt32(cmd.ExecuteScalar())
                     End Using
                 End If
 
                 ' Now insert into Users
-                Dim insertUser As String = "INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID) VALUES (@Email, @Password, @Role, @RefID)"
+                Dim insertUser As String = "INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID, Region) VALUES (@Email, @Password, @Role, @RefID, @Region)"
                 Using cmd As New SqlCommand(insertUser, conn, transaction)
                     cmd.Parameters.AddWithValue("@Email", email)
-                    cmd.Parameters.AddWithValue("@Password", password) ' In a real app, hash this!
+                    cmd.Parameters.AddWithValue("@Password", password) 
                     cmd.Parameters.AddWithValue("@Role", role)
                     cmd.Parameters.AddWithValue("@RefID", newRefId)
+                    cmd.Parameters.AddWithValue("@Region", region)
                     cmd.ExecuteNonQuery()
                 End Using
 

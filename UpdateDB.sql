@@ -142,11 +142,12 @@ AS
 BEGIN
     IF UPDATE(Status)
     BEGIN
+        -- Release rider only when customer confirms delivery
         UPDATE Rider_QB
         SET Availability = 1
         FROM Rider_QB r
         JOIN inserted i ON r.RiderID = i.RiderID
-        WHERE i.Status = 'Delivered';
+        WHERE i.Status = 'Confirmed';
     END
 END;
 GO
@@ -169,29 +170,42 @@ GO
 
 -- Populate Platform Managers
 INSERT INTO PlatformManager_QB (FullName, Department, Segment) VALUES ('Main Admin', 'Operations', 'SuperAdmin');
-INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID) VALUES ('admin@quickbyte.com', 'Admin@123', 'PlatformManager', 1);
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID, Region) VALUES ('admin@quickbyte.com', 'Admin@123', 'PlatformManager', 1, 'Islamabad');
 
--- Populate Restaurants
-INSERT INTO Restaurant_QB (Name, Street, City, ContactNumber) VALUES ('Pizza Palace','Main Road','Islamabad','0511111111'), ('Burger Hub','Blue Area','Islamabad','0512222222');
-INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID) 
-SELECT 'manager' + CAST(RestaurantID AS VARCHAR) + '@quickbyte.com', 'Rest@123', 'RestaurantManager', RestaurantID FROM Restaurant_QB;
+-- Populate Restaurants (Regions: Karachi, Lahore, Islamabad, Rawalpindi)
+INSERT INTO Restaurant_QB (Name, Street, City, Region, ContactNumber, Segment, IsActive) VALUES 
+('Pizza Palace','Main Road','Islamabad','Islamabad','0511111111', 'Standard', 1),
+('Lahore Grill','Mall Road','Lahore','Lahore','0421111111', 'Standard', 1),
+('Karachi Spice','Clifton','Karachi','Karachi','0211111111', 'Standard', 1);
+
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID, Region) 
+SELECT LOWER(REPLACE(Name, ' ', '')) + '@quickbyte.com', 'Rest@123', 'RestaurantManager', RestaurantID, Region FROM Restaurant_QB;
 
 -- Populate Riders
-INSERT INTO Rider_QB (Name, ContactNumber, Availability) VALUES ('Ahmed','03450000001',1), ('Bilal','03450000002',1);
-INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID) 
-SELECT 'rider' + CAST(RiderID AS VARCHAR) + '@quickbyte.com', 'Rider@123', 'Rider', RiderID FROM Rider_QB;
+INSERT INTO Rider_QB (Name, ContactNumber, Availability, Region, IsActive) VALUES 
+('Ahmed','03450000001',1, 'Islamabad', 1), 
+('Bilal','03450000002',1, 'Lahore', 1),
+('Zain','03450000003',1, 'Karachi', 1);
+
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID, Region) 
+SELECT LOWER(Name) + '@rider.com', 'Rider@123', 'Rider', RiderID, Region FROM Rider_QB;
 
 -- Populate Customers
-INSERT INTO Customer_QB (FirstName, LastName, Email, PhoneNumber) VALUES ('Ali','Raza','ali@example.com','03001111111'), ('Sara','Khan','sara@example.com','03002222222');
-INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID) 
-SELECT Email, 'Customer@123', 'Customer', CustomerID FROM Customer_QB;
+INSERT INTO Customer_QB (FirstName, LastName, Email, PhoneNumber, Region) VALUES 
+('Ali','Raza','ali@example.com','03001111111', 'Islamabad'), 
+('Sara','Khan','sara@example.com','03002222222', 'Lahore');
+
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID, Region) 
+SELECT Email, 'Customer@123', 'Customer', CustomerID, Region FROM Customer_QB;
 
 -- Populate Menu
-DECLARE @Piz INT = (SELECT TOP 1 RestaurantID FROM Restaurant_QB WHERE Name = 'Pizza Palace');
-INSERT INTO MenuItem_QB (RestaurantID, Name, Description, Price) VALUES (@Piz, 'Pepperoni Pizza', 'Large pepperoni pizza', 1200);
+INSERT INTO MenuItem_QB (RestaurantID, Name, Description, Price, Available) VALUES 
+(3001, 'Pepperoni Pizza', 'Large pepperoni pizza', 1200, 1),
+(3002, 'Chicken Karahi', 'Spicy chicken karahi', 1500, 1),
+(3003, 'Sindhi Biryani', 'Authentic Sindhi biryani', 800, 1);
 
 -- Populate Initial Orders & Payments
-INSERT INTO Order_QB (CustomerID, RestaurantID, RiderID, Status) VALUES (2001, 3001, 5001, 'Delivered');
+INSERT INTO Order_QB (CustomerID, RestaurantID, RiderID, Status, Region) VALUES (2001, 3001, 5001, 'Confirmed', 'Islamabad');
 INSERT INTO OrderItem_QB (OrderID, ItemID, Quantity) VALUES (6001, 4001, 2);
 INSERT INTO Payment_QB (OrderID, Method, Amount, Status) VALUES (6001, 'Cash', 2400, 'Paid');
 
