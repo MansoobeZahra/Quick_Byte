@@ -29,11 +29,11 @@ Partial Class AdminDashboard
                                  "  WHEN AVG(CAST(item_counts.total_items AS FLOAT)) > 5 THEN 'Bulk Buyer' " &
                                  "  ELSE 'Regular' " &
                                  "END AS Segment " &
-                                 "FROM Customer c " &
+                                 "FROM Customer_QB c " &
                                  "LEFT JOIN Order_QB o ON c.CustomerID = o.CustomerID " &
-                                 "LEFT JOIN OrderItem oi ON o.OrderID = oi.OrderID " &
-                                 "LEFT JOIN MenuItem mi ON oi.ItemID = mi.ItemID " &
-                                 "LEFT JOIN (SELECT OrderID, SUM(Quantity) as total_items FROM OrderItem GROUP BY OrderID) item_counts ON o.OrderID = item_counts.OrderID " &
+                                 "LEFT JOIN OrderItem_QB oi ON o.OrderID = oi.OrderID " &
+                                 "LEFT JOIN MenuItem_QB mi ON oi.ItemID = mi.ItemID " &
+                                 "LEFT JOIN (SELECT OrderID, SUM(Quantity) as total_items FROM OrderItem_QB GROUP BY OrderID) item_counts ON o.OrderID = item_counts.OrderID " &
                                  "GROUP BY c.CustomerID, c.FirstName, c.LastName"
             
             Using cmd As New SqlCommand(query, conn)
@@ -50,10 +50,10 @@ Partial Class AdminDashboard
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
             Dim query As String = "SELECT r.Name, COUNT(o.OrderID) AS OrderCount, ISNULL(SUM(mi.Price * oi.Quantity), 0) AS Revenue " &
-                                 "FROM Restaurant r " &
+                                 "FROM Restaurant_QB r " &
                                  "LEFT JOIN Order_QB o ON r.RestaurantID = o.RestaurantID " &
-                                 "LEFT JOIN OrderItem oi ON o.OrderID = oi.OrderID " &
-                                 "LEFT JOIN MenuItem mi ON oi.ItemID = mi.ItemID " &
+                                 "LEFT JOIN OrderItem_QB oi ON o.OrderID = oi.OrderID " &
+                                 "LEFT JOIN MenuItem_QB mi ON oi.ItemID = mi.ItemID " &
                                  "GROUP BY r.RestaurantID, r.Name"
             Using cmd As New SqlCommand(query, conn)
                 Dim dt As New System.Data.DataTable()
@@ -68,7 +68,7 @@ Partial Class AdminDashboard
     Private Sub LoadRiderActivity()
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT Name, Availability, (SELECT COUNT(*) FROM Order_QB WHERE RiderID = Rider.RiderID AND Status = 'Delivered') AS Deliveries FROM Rider"
+            Dim query As String = "SELECT Name, Availability, (SELECT COUNT(*) FROM Order_QB WHERE RiderID = Rider.RiderID AND Status = 'Delivered') AS Deliveries FROM Rider_QB"
             Using cmd As New SqlCommand(query, conn)
                 Dim dt As New System.Data.DataTable()
                 Dim da As New SqlDataAdapter(cmd)
