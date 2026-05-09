@@ -189,7 +189,7 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Status">
                                         <ItemTemplate>
-                                            <span style='<%# If(Convert.ToBoolean(Eval("IsActive")), "color:green;", "color:red;") %>'>
+                                            <span style='<%# GetStatusStyle(Eval("IsActive")) %>'>
                                                 <%# If(Convert.ToBoolean(Eval("IsActive")), "Active", "Disabled") %>
                                             </span>
                                         </ItemTemplate>
@@ -231,7 +231,7 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Availability">
                                         <ItemTemplate>
-                                            <span class='badge' style='<%# If(Convert.ToBoolean(Eval("Availability")), "background:#d4edda;color:#155724;", "background:#f8d7da;color:#721c24;") %>'>
+                                            <span class="badge" style='<%# GetAvailabilityStyle(Eval("Availability")) %>'>
                                                 <%# If(Convert.ToBoolean(Eval("Availability")), "Available", "Offline") %>
                                             </span>
                                         </ItemTemplate>
@@ -262,7 +262,7 @@
                                     <asp:BoundField DataField="TargetType" HeaderText="Role" />
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
-                                            <span class="badge" style='<%# If(Convert.ToInt32(Eval("Rating")) >= 4, "background:#d4edda;color:#155724;", "background:#fff3cd;color:#856404;") %>'>
+                                            <span class="badge" style='<%# GetRatingStyle(Eval("Rating")) %>'>
                                                 <%# Eval("Rating") %> / 5
                                             </span>
                                         </ItemTemplate>

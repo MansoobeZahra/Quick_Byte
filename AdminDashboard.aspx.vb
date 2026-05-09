@@ -186,6 +186,18 @@ Partial Class AdminDashboard
         End Select
     End Function
 
+    Protected Function GetStatusStyle(ByVal isActive As Object) As String
+        Return If(Convert.ToBoolean(isActive), "color:green;", "color:red;")
+    End Function
+
+    Protected Function GetAvailabilityStyle(ByVal availability As Object) As String
+        Return If(Convert.ToBoolean(availability), "background:#d4edda;color:#155724;", "background:#f8d7da;color:#721c24;")
+    End Function
+
+    Protected Function GetRatingStyle(ByVal rating As Object) As String
+        Return If(Convert.ToInt32(rating) >= 4, "background:#d4edda;color:#155724;", "background:#fff3cd;color:#856404;")
+    End Function
+
     Protected Sub lnkLogout_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         FormsAuthentication.SignOut()
         Session.Clear()
