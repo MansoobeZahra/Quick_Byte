@@ -1,200 +1,188 @@
+-- QuickByte Food Delivery App - Unified Clean Schema
+CREATE DATABASE FoodserviceDB;
+GO
 USE FoodserviceDB;
 GO
 
--- 1. Create a centralized Users table for RBAC and authentication
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Users_QB')
+-- ==========================================
+-- 1. STAKEHOLDER TABLES (Entity Tables)
+-- ==========================================
+
+-- Customers
+CREATE TABLE Customer_QB (
+    CustomerID INT IDENTITY(2001,1) PRIMARY KEY,
+    FirstName NVARCHAR(50),
+    LastName NVARCHAR(50),
+    Email NVARCHAR(100) UNIQUE,
+    PhoneNumber NVARCHAR(20),
+    Segment NVARCHAR(50) DEFAULT 'Regular', -- For segmentation logic
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+-- Restaurants
+CREATE TABLE Restaurant_QB (
+    RestaurantID INT IDENTITY(3001,1) PRIMARY KEY,
+    Name NVARCHAR(100),
+    Street NVARCHAR(100),
+    City NVARCHAR(50),
+    ContactNumber NVARCHAR(20),
+    Segment NVARCHAR(50) DEFAULT 'Standard' -- For performance segmentation
+);
+
+-- Riders
+CREATE TABLE Rider_QB (
+    RiderID INT IDENTITY(5001,1) PRIMARY KEY,
+    Name NVARCHAR(100),
+    ContactNumber NVARCHAR(20),
+    Availability BIT DEFAULT 1,
+    Segment NVARCHAR(50) DEFAULT 'Standard'
+);
+
+-- Platform Managers (Internal Admins)
+CREATE TABLE PlatformManager_QB (
+    ManagerID INT IDENTITY(1,1) PRIMARY KEY,
+    FullName NVARCHAR(100),
+    Department NVARCHAR(50),
+    Segment NVARCHAR(50) DEFAULT 'Standard'
+);
+
+-- ==========================================
+-- 2. CENTRALIZED USER MANAGEMENT (RBAC)
+-- ==========================================
+
+CREATE TABLE Users_QB (
+    UserID INT IDENTITY(1,1) PRIMARY KEY,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    PasswordHash NVARCHAR(255) NOT NULL,
+    Role NVARCHAR(50) NOT NULL, -- 'Customer', 'RestaurantManager', 'Rider', 'PlatformManager'
+    ReferenceID INT NULL -- Links to CustomerID, RestaurantID, RiderID, or ManagerID
+);
+
+-- ==========================================
+-- 3. OPERATIONAL TABLES
+-- ==========================================
+
+-- Menu Items
+CREATE TABLE MenuItem_QB (
+    ItemID INT IDENTITY(4001,1) PRIMARY KEY,
+    RestaurantID INT NOT NULL,
+    Name NVARCHAR(100),
+    Description NVARCHAR(255),
+    Price DECIMAL(10,2),
+    Available BIT DEFAULT 1,
+    CONSTRAINT FK_MenuItem_Restaurant FOREIGN KEY (RestaurantID) REFERENCES Restaurant_QB(RestaurantID)
+);
+
+-- Orders
+CREATE TABLE Order_QB (
+    OrderID INT IDENTITY(6001,1) PRIMARY KEY,
+    CustomerID INT NOT NULL,
+    RestaurantID INT NOT NULL,
+    RiderID INT NOT NULL,
+    OrderDate DATETIME DEFAULT GETDATE(),
+    Status NVARCHAR(30) DEFAULT 'Pending',
+    CONSTRAINT FK_Order_Customer FOREIGN KEY (CustomerID) REFERENCES Customer_QB(CustomerID),
+    CONSTRAINT FK_Order_Restaurant FOREIGN KEY (RestaurantID) REFERENCES Restaurant_QB(RestaurantID),
+    CONSTRAINT FK_Order_Rider FOREIGN KEY (RiderID) REFERENCES Rider_QB(RiderID)
+);
+
+-- Order Items
+CREATE TABLE OrderItem_QB (
+    OrderID INT NOT NULL,
+    ItemID INT NOT NULL,
+    Quantity INT,
+    PRIMARY KEY (OrderID, ItemID),
+    CONSTRAINT FK_OrderItem_Order FOREIGN KEY (OrderID) REFERENCES Order_QB(OrderID),
+    CONSTRAINT FK_OrderItem_MenuItem FOREIGN KEY (ItemID) REFERENCES MenuItem_QB(ItemID)
+);
+
+-- Payments
+CREATE TABLE Payment_QB (
+    PaymentID INT IDENTITY(7001,1) PRIMARY KEY,
+    OrderID INT NOT NULL,
+    Method NVARCHAR(30),
+    Amount DECIMAL(10,2),
+    PaymentDate DATETIME DEFAULT GETDATE(),
+    Status NVARCHAR(30) DEFAULT 'Pending',
+    CONSTRAINT FK_Payment_Order FOREIGN KEY (OrderID) REFERENCES Order_QB(OrderID)
+);
+
+-- ==========================================
+-- 4. LOGGING & AUDIT
+-- ==========================================
+
+CREATE TABLE CustomerAuditLog_QB (
+    LogID INT IDENTITY(1,1) PRIMARY KEY,
+    CustomerID INT,
+    Email NVARCHAR(100),
+    DeletedAt DATETIME DEFAULT GETDATE()
+);
+
+GO
+
+-- ==========================================
+-- 5. TRIGGERS (Automated Business Rules)
+-- ==========================================
+
+-- Auto-update Rider Availability
+CREATE TRIGGER trg_UpdateRiderAvailability
+ON Order_QB
+AFTER UPDATE
+AS
 BEGIN
-    CREATE TABLE Users_QB (
-        UserID INT IDENTITY(1,1) PRIMARY KEY,
-        Email NVARCHAR(100) UNIQUE NOT NULL,
-        PasswordHash NVARCHAR(255) NOT NULL,
-        Role NVARCHAR(50) NOT NULL, -- 'Customer', 'RestaurantManager', 'Rider', 'Admin'
-        ReferenceID INT NULL -- Links to CustomerID, RestaurantID, or RiderID depending on Role
-    );
-END
+    IF UPDATE(Status)
+    BEGIN
+        UPDATE Rider_QB
+        SET Availability = 1
+        FROM Rider_QB r
+        JOIN inserted i ON r.RiderID = i.RiderID
+        WHERE i.Status = 'Delivered';
+    END
+END;
 GO
 
--- 2. Migrate existing Customers to Users
-INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
-SELECT Email, 'Customer@123', 'Customer', CustomerID
-FROM Customer
-WHERE Email NOT IN (SELECT Email FROM Users_QB);
-GO
-
--- 3. We can add default logins for Restaurants
-INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
-SELECT 
-    LOWER(REPLACE(Name, ' ', '')) + '@restaurant.com', 
-    'Restaurant@123', 
-    'RestaurantManager', 
-    RestaurantID
-FROM Restaurant
-WHERE LOWER(REPLACE(Name, ' ', '')) + '@restaurant.com' NOT IN (SELECT Email FROM Users_QB);
-GO
-
--- 4. Default logins for Riders
-INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
-SELECT 
-    LOWER(REPLACE(Name, ' ', '')) + CAST(RiderID AS NVARCHAR) + '@rider.com', 
-    'Rider@123', 
-    'Rider', 
-    RiderID
-FROM Rider
-WHERE LOWER(REPLACE(Name, ' ', '')) + CAST(RiderID AS NVARCHAR) + '@rider.com' NOT IN (SELECT Email FROM Users_QB);
-GO
-
--- 5. Default Admin User
-IF NOT EXISTS (SELECT * FROM Users_QB WHERE Role = 'Admin')
+-- Log Deleted Customers
+CREATE TRIGGER trg_LogCustomerDeletion
+ON Customer_QB
+AFTER DELETE
+AS
 BEGIN
-    INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
-    VALUES ('admin@quickbyte.com', 'Admin@123', 'Admin', NULL);
-END
+    INSERT INTO CustomerAuditLog_QB (CustomerID, Email)
+    SELECT CustomerID, Email
+    FROM deleted;
+END;
 GO
 
--- 6. Rename Order table to Order_QB
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Order')
-BEGIN
-    EXEC sp_rename 'Order', 'Order_QB';
-END
-GO
+-- ==========================================
+-- 6. LIVE SAMPLE DATA & USERS
+-- ==========================================
 
--- 7. Rename remaining tables for consistency
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Customer') EXEC sp_rename 'Customer', 'Customer_QB';
-GO
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Restaurant') EXEC sp_rename 'Restaurant', 'Restaurant_QB';
-GO
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Rider') EXEC sp_rename 'Rider', 'Rider_QB';
-GO
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'MenuItem') EXEC sp_rename 'MenuItem', 'MenuItem_QB';
-GO
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'OrderItem') EXEC sp_rename 'OrderItem', 'OrderItem_QB';
-GO
-IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Payment') EXEC sp_rename 'Payment', 'Payment_QB';
-GO
+-- Populate Platform Managers
+INSERT INTO PlatformManager_QB (FullName, Department, Segment) VALUES ('Main Admin', 'Operations', 'SuperAdmin');
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID) VALUES ('admin@quickbyte.com', 'Admin@123', 'PlatformManager', 1);
 
--- 8. Create PlatformManager_QB table
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'PlatformManager_QB')
-BEGIN
-    CREATE TABLE PlatformManager_QB (
-        ManagerID INT IDENTITY(1,1) PRIMARY KEY,
-        FullName NVARCHAR(100) NOT NULL,
-        Department NVARCHAR(50),
-        Segment NVARCHAR(50) DEFAULT 'Standard'
-    );
-END
-GO
+-- Populate Restaurants
+INSERT INTO Restaurant_QB (Name, Street, City, ContactNumber) VALUES ('Pizza Palace','Main Road','Islamabad','0511111111'), ('Burger Hub','Blue Area','Islamabad','0512222222');
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID) 
+SELECT 'manager' + CAST(RestaurantID AS VARCHAR) + '@quickbyte.com', 'Rest@123', 'RestaurantManager', RestaurantID FROM Restaurant_QB;
 
--- 9. Add Segment column to other stakeholders for advanced segmentation
-IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Customer_QB') AND name = 'Segment')
-    ALTER TABLE Customer_QB ADD Segment NVARCHAR(50) DEFAULT 'Regular';
-GO
-IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Restaurant_QB') AND name = 'Segment')
-    ALTER TABLE Restaurant_QB ADD Segment NVARCHAR(50) DEFAULT 'Standard';
-GO
-IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('Rider_QB') AND name = 'Segment')
-    ALTER TABLE Rider_QB ADD Segment NVARCHAR(50) DEFAULT 'Regular';
-GO
+-- Populate Riders
+INSERT INTO Rider_QB (Name, ContactNumber, Availability) VALUES ('Ahmed','03450000001',1), ('Bilal','03450000002',1);
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID) 
+SELECT 'rider' + CAST(RiderID AS VARCHAR) + '@quickbyte.com', 'Rider@123', 'Rider', RiderID FROM Rider_QB;
 
--- 11. Populate Live Sample Data for Demonstration
--- Clear existing sample data to avoid duplicates if needed (optional)
--- DELETE FROM Payment_QB; DELETE FROM OrderItem_QB; DELETE FROM Order_QB;
+-- Populate Customers
+INSERT INTO Customer_QB (FirstName, LastName, Email, PhoneNumber) VALUES ('Ali','Raza','ali@example.com','03001111111'), ('Sara','Khan','sara@example.com','03002222222');
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID) 
+SELECT Email, 'Customer@123', 'Customer', CustomerID FROM Customer_QB;
 
--- Realistic Customers
-IF NOT EXISTS (SELECT * FROM Customer_QB WHERE Email = 'sarah.j@live.com')
-BEGIN
-    INSERT INTO Customer_QB (FirstName, LastName, Email, PhoneNumber, Segment) VALUES 
-    ('Sarah', 'Johnson', 'sarah.j@live.com', '03001112223', 'Premium'),
-    ('Mike', 'Ross', 'mike.r@gmail.com', '03004445556', 'Bulk Buyer'),
-    ('Ali', 'Khan', 'ali.k@yahoo.com', '03007778889', 'Regular'),
-    ('Zahra', 'Mansoob', 'zahra.m@outlook.com', '03219998887', 'Premium');
-END
-GO
+-- Populate Menu
+DECLARE @Piz INT = (SELECT TOP 1 RestaurantID FROM Restaurant_QB WHERE Name = 'Pizza Palace');
+INSERT INTO MenuItem_QB (RestaurantID, Name, Description, Price) VALUES (@Piz, 'Pepperoni Pizza', 'Large pepperoni pizza', 1200);
 
--- Realistic Restaurants
-IF NOT EXISTS (SELECT * FROM Restaurant_QB WHERE Name = 'Burger King')
-BEGIN
-    INSERT INTO Restaurant_QB (Name, Street, City, ContactNumber, Segment) VALUES 
-    ('Burger King', 'F-7 Markaz', 'Islamabad', '0512223334', 'Top Performance'),
-    ('Sushi Dash', 'Gulberg III', 'Lahore', '0423334445', 'Standard'),
-    ('Taco Town', 'DHA Phase 6', 'Karachi', '0214445556', 'Needs Attention');
-END
-GO
+-- Populate Initial Orders & Payments
+INSERT INTO Order_QB (CustomerID, RestaurantID, RiderID, Status) VALUES (2001, 3001, 5001, 'Delivered');
+INSERT INTO OrderItem_QB (OrderID, ItemID, Quantity) VALUES (6001, 4001, 2);
+INSERT INTO Payment_QB (OrderID, Method, Amount, Status) VALUES (6001, 'Cash', 2400, 'Paid');
 
--- Populate Menus
-IF NOT EXISTS (SELECT * FROM MenuItem_QB)
-BEGIN
-    DECLARE @BK INT = (SELECT TOP 1 RestaurantID FROM Restaurant_QB WHERE Name = 'Burger King');
-    DECLARE @SD INT = (SELECT TOP 1 RestaurantID FROM Restaurant_QB WHERE Name = 'Sushi Dash');
-    
-    INSERT INTO MenuItem_QB (RestaurantID, Name, Description, Price, Available) VALUES 
-    (@BK, 'Whopper Meal', 'Flame-grilled beef with fries', 1200, 1),
-    (@BK, 'Chicken Royale', 'Crispy chicken with lettuce', 950, 1),
-    (@BK, 'Family Bucket', '10pcs Chicken + 2 Large Fries', 3500, 1),
-    (@SD, 'California Roll', 'Crab, avocado, and cucumber', 1500, 1),
-    (@SD, 'Salmon Nigiri', 'Fresh salmon over rice', 1800, 1);
-END
-GO
-
--- Realistic Riders
-IF NOT EXISTS (SELECT * FROM Rider_QB WHERE Name = 'Kamran Speed')
-BEGIN
-    INSERT INTO Rider_QB (Name, ContactNumber, Availability, Segment) VALUES 
-    ('Kamran Speed', '03451112222', 1, 'Elite Rider'),
-    ('Javed Express', '03453334444', 1, 'Standard Rider'),
-    ('Aslam Pro', '03455556666', 0, 'Standard Rider');
-END
-GO
-
--- Generate "Live" Orders for Segmentation Dashboard
-IF NOT EXISTS (SELECT * FROM Order_QB)
-BEGIN
-    DECLARE @Cust1 INT = (SELECT TOP 1 CustomerID FROM Customer_QB WHERE Email = 'sarah.j@live.com');
-    DECLARE @Cust2 INT = (SELECT TOP 1 CustomerID FROM Customer_QB WHERE Email = 'mike.r@gmail.com');
-    DECLARE @Rest1 INT = (SELECT TOP 1 RestaurantID FROM Restaurant_QB WHERE Name = 'Burger King');
-    DECLARE @Ride1 INT = (SELECT TOP 1 RiderID FROM Rider_QB WHERE Name = 'Kamran Speed');
-    DECLARE @Item1 INT = (SELECT TOP 1 ItemID FROM MenuItem_QB WHERE Name = 'Family Bucket');
-    DECLARE @Item2 INT = (SELECT TOP 1 ItemID FROM MenuItem_QB WHERE Name = 'Whopper Meal');
-
-    -- Premium Customer Orders (Many orders)
-    INSERT INTO Order_QB (CustomerID, RestaurantID, RiderID, Status, OrderDate)
-    SELECT @Cust1, @Rest1, @Ride1, 'Delivered', GETDATE() - 1 FROM (SELECT TOP 12 1 as n FROM sys.objects) as t;
-
-    -- Bulk Buyer Orders (Large quantities)
-    INSERT INTO Order_QB (CustomerID, RestaurantID, RiderID, Status, OrderDate) VALUES (@Cust2, @Rest1, @Ride1, 'Delivered', GETDATE());
-    DECLARE @BulkOrderID INT = SCOPE_IDENTITY();
-    INSERT INTO OrderItem_QB (OrderID, ItemID, Quantity) VALUES (@BulkOrderID, @Item1, 6);
-
-    -- Standard items for other orders
-    INSERT INTO OrderItem_QB (OrderID, ItemID, Quantity)
-    SELECT OrderID, @Item2, 1 FROM Order_QB WHERE OrderID <> @BulkOrderID;
-
-    -- Payments
-    INSERT INTO Payment_QB (OrderID, Method, Amount, Status, PaymentDate)
-    SELECT OrderID, 'Cash', 1200, 'Paid', GETDATE() FROM Order_QB;
-END
-GO
-
--- 10. Populate Platform Manager and update Users_QB
-IF NOT EXISTS (SELECT * FROM PlatformManager_QB WHERE FullName = 'Main Admin')
-BEGIN
-    INSERT INTO PlatformManager_QB (FullName, Department) VALUES ('Main Admin', 'Operations');
-    DECLARE @MgrID INT = SCOPE_IDENTITY();
-    
-    IF NOT EXISTS (SELECT * FROM Users_QB WHERE Email = 'admin@quickbyte.com')
-        INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
-        VALUES ('admin@quickbyte.com', 'Admin@123', 'PlatformManager', @MgrID);
-    ELSE
-        UPDATE Users_QB SET Role = 'PlatformManager', ReferenceID = @MgrID WHERE Email = 'admin@quickbyte.com';
-END
-GO
-
--- 12. Final User Sync for all roles
-INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
-SELECT Email, 'Customer@123', 'Customer', CustomerID FROM Customer_QB WHERE Email NOT IN (SELECT Email FROM Users_QB);
-GO
-INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
-SELECT LOWER(REPLACE(Name, ' ', '')) + '@restaurant.com', 'Rest@123', 'RestaurantManager', RestaurantID FROM Restaurant_QB WHERE LOWER(REPLACE(Name, ' ', '')) + '@restaurant.com' NOT IN (SELECT Email FROM Users_QB);
-GO
-INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
-SELECT LOWER(REPLACE(Name, ' ', '')) + '@rider.com', 'Rider@123', 'Rider', RiderID FROM Rider_QB WHERE LOWER(REPLACE(Name, ' ', '')) + '@rider.com' NOT IN (SELECT Email FROM Users_QB);
 GO
