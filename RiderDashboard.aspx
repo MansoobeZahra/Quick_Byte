@@ -29,7 +29,6 @@
                         <% ElseIf Session("Role") = "Rider" Then %>
                             <li><a href="RiderDashboard.aspx">Dashboard</a></li>
                         <% ElseIf Session("Role") = "Admin" Or Session("Role") = "PlatformManager" Then %>
-                            <li><a href="Search.aspx">Search</a></li>
                             <li><a href="Orders.aspx">All Orders</a></li>
                             <li><a href="AdminDashboard.aspx">Segmentation Dashboard</a></li>
                         <% End If %>
