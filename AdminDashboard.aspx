@@ -7,44 +7,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - QUICK byte</title>
     <link rel="stylesheet" href="index.css">
+    <style>
+        .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 4px solid #ba1010; }
+        .stat-card h2 { color: #ba1010; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .admin-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .admin-table th { background: #fcf8ec; text-align: left; padding: 10px; border-bottom: 2px solid #ba1010; }
+        .admin-table td { padding: 10px; border-bottom: 1px solid #eee; }
+        .segment-premium { color: gold; font-weight: bold; }
+        .segment-regular { color: #555; }
+        .segment-bulk { color: #ba1010; font-weight: bold; }
+        .full-width { grid-column: 1 / -1; }
+    </style>
 </head>
 <body>
     <form id="form1" runat="server">
         <nav class="navbar">
             <div class="nav-container">
                 <a href="Default.aspx" class="nav-logo">
-                    <img src="assets/logo.png" alt="QuickByte Logo" style="height:40px;" /> QuickByte
+                    <img src="assets/logo.png" alt="QuickByte Logo" style="height:40px;" />
+                    QuickByte Admin
                 </a>
                 <ul class="nav-menu">
                     <li><a href="Default.aspx">Home</a></li>
-                    <% If User.Identity.IsAuthenticated Then %>
-                        <li class="role-badge"><%= Session("Role") %></li>
-                        <% If Session("Role") = "Customer" Then %>
-                            <li><a href="Search.aspx">Search</a></li>
-                            <li><a href="Orders.aspx">My Orders</a></li>
-                        <% ElseIf Session("Role") = "RestaurantManager" Then %>
-                            <li><a href="Menu.aspx">Manage Menu</a></li>
-                            <li><a href="Orders.aspx">Orders</a></li>
-                        <% ElseIf Session("Role") = "Rider" Then %>
-                            <li><a href="RiderDashboard.aspx">Dashboard</a></li>
-                        <% ElseIf Session("Role") = "Admin" Or Session("Role") = "PlatformManager" Then %>
-                            <li><a href="Search.aspx">Search</a></li>
-                            <li><a href="Orders.aspx">All Orders</a></li>
-                            <li><a href="AdminDashboard.aspx">Admin Dashboard</a></li>
-                        <% End If %>
-                        <li><asp:LinkButton ID="lnkLogout" runat="server" OnClick="lnkLogout_Click">Logout</asp:LinkButton></li>
-                    <% Else %>
-                        <li><a href="Register.aspx">Register</a></li>
-                        <li><a href="Login.aspx">Login</a></li>
-                        <li><a href="Search.aspx">Search</a></li>
-                    <% End If %>
+                    <li><a href="Orders.aspx">All Orders</a></li>
+                    <li><a href="AdminDashboard.aspx" class="active">Dashboard</a></li>
+                    <li><asp:LinkButton ID="lnkLogout" runat="server" OnClick="lnkLogout_Click">Logout</asp:LinkButton></li>
                 </ul>
             </div>
         </nav>
 
-        <div class="container">
-            <header style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 10px;">
-                <h1>Business Segmentation Dashboard</h1>
+        <div class="container" style="max-width: 1200px;">
+            <header style="text-align: center; margin-bottom: 30px;">
+                <h1 style="color: #ba1010;">Business Segmentation Dashboard</h1>
                 <p>Real-time analytics and stakeholder management</p>
             </header>
 
