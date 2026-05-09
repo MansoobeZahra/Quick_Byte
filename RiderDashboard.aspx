@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rider Dashboard - QUICK byte</title>
-    <link rel="stylesheet" href="rider-dashboard.css">
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -75,7 +74,7 @@
                             <asp:BoundField DataField="Items" HeaderText="Items" />
                             <asp:TemplateField HeaderText="Actions">
                                 <ItemTemplate>
-                                    <asp:Button ID="btnPickOrder" runat="server" Text="Pick Up Order" CommandName="PickOrder" CommandArgument='<%# Eval("OrderID") %>' CssClass="btn-update" />
+                                    <asp:Button ID="btnPickOrder" runat="server" Text="Pick Up Order" CommandName="PickOrder" CommandArgument='<%# Eval("OrderID") %>' CssClass="btn-primary" style="padding:5px 15px;" />
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -94,7 +93,7 @@
                             <asp:BoundField DataField="RestaurantInfo" HeaderText="Restaurant" HtmlEncode="false" />
                             <asp:TemplateField HeaderText="Update Status">
                                 <ItemTemplate>
-                                    <asp:DropDownList ID="ddlStatus" runat="server" CssClass="status-select">
+                                    <asp:DropDownList ID="ddlStatus" runat="server" CssClass="form-input" style="padding:5px;">
                                         <asp:ListItem Value="Assigned" Text="Assigned"></asp:ListItem>
                                         <asp:ListItem Value="Picked Up" Text="Picked Up"></asp:ListItem>
                                         <asp:ListItem Value="Delivered" Text="Delivered"></asp:ListItem>
@@ -103,7 +102,7 @@
                             </asp:TemplateField>
                             <asp:TemplateField HeaderText="Actions">
                                 <ItemTemplate>
-                                    <asp:Button ID="btnUpdate" runat="server" Text="Update" CssClass="btn-update" OnClick="btnUpdate_Click" />
+                                    <asp:Button ID="btnUpdate" runat="server" Text="Update" CssClass="btn-primary" style="padding:5px 15px;" OnClick="btnUpdate_Click" />
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -127,7 +126,9 @@
             </div>
         </div>
         <footer>
-            <p>&copy; 2026 QUICK byte - Taste the speed</p>
+            <p>&copy; 2026 QUICK byte | Taste the speed</p>
+            <p>Internet application development</p>
+            <p>Mansoob-e-Zahra</p>
         </footer>
     </form>
 </body>

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration - QUICK byte</title>
-    <link rel="stylesheet" href="registration.css">
+    <link rel="stylesheet" href="index.css">
     <script type="text/javascript">
         function toggleFields() {
             var userType = document.getElementById('<%= ddlUserType.ClientID %>').value;
@@ -108,9 +108,16 @@
                 </div>
 
                 <div class="btn-container">
-                    <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn-submit" OnClick="btnRegister_Click" />
-                    <button type="reset" class="btn-reset">Clear Form</button>
+                    <asp:Button ID="btnRegister" runat="server" Text="Register" CssClass="btn-primary" OnClick="btnRegister_Click" />
+                    <button type="reset" class="btn-secondary">Clear Form</button>
                 </div>
+            </div>
+        </div>
+        <footer>
+            <p>&copy; 2026 QUICK byte | Taste the speed</p>
+            <p>Internet application development</p>
+            <p>Mansoob-e-Zahra</p>
+        </footer>
 
                 <div class="links">
                     <a href="Login.aspx">Already have an account? Login here</a> |
