@@ -50,10 +50,13 @@
                 <p class="subtitle">Manage your deliveries</p>
 
                 <div class="rider-info">
-                    <h2>Your Information</h2>
-                    <asp:Literal ID="litRiderInfo" runat="server"></asp:Literal>
+                    <h2>Rider Profile</h2>
                     <div class="info-row">
-                        <span class="label">Status:</span>
+                        <span class="label">Region:</span>
+                        <span class="value"><asp:Label ID="lblRegion" runat="server" Font-Bold="true"></asp:Label></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Availability:</span>
                         <span class="value">
                             <label class="toggle-label">
                                 <asp:CheckBox ID="chkAvailability" runat="server" AutoPostBack="true" OnCheckedChanged="chkAvailability_CheckedChanged" />
@@ -63,21 +66,39 @@
                     </div>
                 </div>
 
+                <!-- NEW: Available Orders in Region -->
+                <div class="assigned-orders" style="margin-top: 30px; border-top: 2px solid #ba1010; padding-top: 20px;">
+                    <h2>Available Orders in <asp:Label ID="lblRegionTitle" runat="server"></asp:Label></h2>
+                    <asp:GridView ID="gvAvailableOrders" runat="server" AutoGenerateColumns="False" CssClass="orders-table" GridLines="None" DataKeyNames="OrderID" OnRowCommand="gvAvailableOrders_RowCommand">
+                        <Columns>
+                            <asp:BoundField DataField="OrderID" HeaderText="Order #" />
+                            <asp:BoundField DataField="RestaurantName" HeaderText="Restaurant" />
+                            <asp:BoundField DataField="Items" HeaderText="Items" />
+                            <asp:TemplateField HeaderText="Actions">
+                                <ItemTemplate>
+                                    <asp:Button ID="btnPickOrder" runat="server" Text="Pick Up Order" CommandName="PickOrder" CommandArgument='<%# Eval("OrderID") %>' CssClass="btn-update" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                        <EmptyDataTemplate>
+                            <div class="no-results">No orders available in your region.</div>
+                        </EmptyDataTemplate>
+                    </asp:GridView>
+                </div>
+
                 <div class="assigned-orders">
-                    <h2>Assigned Deliveries</h2>
+                    <h2>Active Deliveries (Assigned to You)</h2>
                     <asp:GridView ID="gvAssignedOrders" runat="server" AutoGenerateColumns="False" CssClass="orders-table" GridLines="None" DataKeyNames="OrderID">
                         <Columns>
                             <asp:BoundField DataField="OrderID" HeaderText="Order ID" />
                             <asp:BoundField DataField="CustomerInfo" HeaderText="Customer" HtmlEncode="false" />
                             <asp:BoundField DataField="RestaurantInfo" HeaderText="Restaurant" HtmlEncode="false" />
-                            <asp:BoundField DataField="TotalAmount" HeaderText="Amount" DataFormatString="{0:C}" />
-                            <asp:TemplateField HeaderText="Status">
+                            <asp:TemplateField HeaderText="Update Status">
                                 <ItemTemplate>
                                     <asp:DropDownList ID="ddlStatus" runat="server" CssClass="status-select">
-                                        <asp:ListItem Value="Preparing" Text="Preparing"></asp:ListItem>
+                                        <asp:ListItem Value="Assigned" Text="Assigned"></asp:ListItem>
                                         <asp:ListItem Value="Picked Up" Text="Picked Up"></asp:ListItem>
                                         <asp:ListItem Value="Delivered" Text="Delivered"></asp:ListItem>
-                                        <asp:ListItem Value="Cancelled" Text="Cancelled"></asp:ListItem>
                                     </asp:DropDownList>
                                 </ItemTemplate>
                             </asp:TemplateField>
@@ -88,20 +109,19 @@
                             </asp:TemplateField>
                         </Columns>
                         <EmptyDataTemplate>
-                            <div class="no-results">No deliveries assigned to you right now.</div>
+                            <div class="no-results">You have no active deliveries.</div>
                         </EmptyDataTemplate>
                     </asp:GridView>
                 </div>
 
                 <div class="delivery-history">
-                    <h2>Your Delivery History</h2>
+                    <h2>Completed & Confirmed History</h2>
                     <asp:GridView ID="gvDeliveryHistory" runat="server" AutoGenerateColumns="False" CssClass="history-table" GridLines="None">
                         <Columns>
                             <asp:BoundField DataField="OrderID" HeaderText="Order ID" />
                             <asp:BoundField DataField="OrderDate" HeaderText="Date" DataFormatString="{0:yyyy-MM-dd}" />
                             <asp:BoundField DataField="CustomerName" HeaderText="Customer" />
-                            <asp:BoundField DataField="TotalAmount" HeaderText="Amount" DataFormatString="{0:C}" />
-                            <asp:BoundField DataField="Status" HeaderText="Status" />
+                            <asp:BoundField DataField="Status" HeaderText="Final Status" />
                         </Columns>
                     </asp:GridView>
                 </div>
