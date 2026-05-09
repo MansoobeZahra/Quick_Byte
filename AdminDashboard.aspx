@@ -183,15 +183,14 @@
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
                                             <b style="color:#f8be2c;">
-                                                <%# Eval("AvgRating", "{0:F1}") %> ●
+                                                <%# Eval("AvgRating", "{0:F1}" ) %> ●
                                             </b>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Status">
                                         <ItemTemplate>
-                                            <span
-                                                style='<%# If(Convert.ToBoolean(Eval("IsActive")), "color:green;", "color:red;") %>'>
-                                                <%# If(Convert.ToBoolean(Eval("IsActive")), "Active" , "Disabled" ) %>
+                                            <span style='<%# If(Convert.ToBoolean(Eval("IsActive")), "color:green;", "color:red;") %>'>
+                                                <%# If(Convert.ToBoolean(Eval("IsActive")), "Active", "Disabled") %>
                                             </span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
@@ -226,15 +225,14 @@
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
                                             <b style="color:#f8be2c;">
-                                                <%# Eval("AvgRating", "{0:F1}") %> ●
+                                                <%# Eval("AvgRating", "{0:F1}" ) %> ●
                                             </b>
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Availability">
                                         <ItemTemplate>
-                                            <span class='badge'
-                                                style='<%# If(Convert.ToBoolean(Eval("Availability")), "background:#d4edda;color:#155724;", "background:#f8d7da;color:#721c24;") %>'>
-                                                <%# If(Convert.ToBoolean(Eval("Availability")), "Available" , "Offline") %>
+                                            <span class='badge' style='<%# If(Convert.ToBoolean(Eval("Availability")), "background:#d4edda;color:#155724;", "background:#f8d7da;color:#721c24;") %>'>
+                                                <%# If(Convert.ToBoolean(Eval("Availability")), "Available", "Offline") %>
                                             </span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
@@ -264,8 +262,7 @@
                                     <asp:BoundField DataField="TargetType" HeaderText="Role" />
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
-                                            <span class="badge"
-                                                style='<%# If(Convert.ToInt32(Eval("Rating")) >= 4, "background:#d4edda;color:#155724;", "background:#fff3cd;color:#856404;") %>'>
+                                            <span class="badge" style='<%# If(Convert.ToInt32(Eval("Rating")) >= 4, "background:#d4edda;color:#155724;", "background:#fff3cd;color:#856404;") %>'>
                                                 <%# Eval("Rating") %> / 5
                                             </span>
                                         </ItemTemplate>
@@ -283,7 +280,9 @@
                 </div>
 
                 <footer>
-                    <p>&copy; 2026 QUICK byte Admin - Internal Use Only</p>
+                    <p>&copy; 2026 QUICK byte - Taste the speed</p>
+                    <p>Internet application development</p>
+                    <p>Mansoob-e-Zahra</p>
                 </footer>
         </form>
     </body>
