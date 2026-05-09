@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment - QUICK byte</title>
-    <link rel="stylesheet" href="payment.css">
     <link rel="stylesheet" href="index.css">
     <script>
         function togglePaymentFields() {
@@ -114,7 +113,7 @@
                         <asp:TextBox ID="txtAmount" runat="server" ReadOnly="true"></asp:TextBox>
                     </div>
 
-                    <asp:Button ID="btnPay" runat="server" Text="Process Payment" CssClass="btn-pay" OnClick="btnPay_Click" />
+                    <asp:Button ID="btnPay" runat="server" Text="Process Payment" CssClass="btn-primary" style="width:100%;" OnClick="btnPay_Click" />
                 </div>
 
                 <div class="payment-history">
@@ -133,7 +132,9 @@
             </div>
         </div>
         <footer>
-            <p>&copy; 2026 QUICK byte - Taste the speed</p>
+            <p>&copy; 2026 QUICK byte | Taste the speed</p>
+            <p>Internet application development</p>
+            <p>Mansoob-e-Zahra</p>
         </footer>
     </form>
 </body>

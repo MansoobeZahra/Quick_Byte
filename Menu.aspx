@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Management - QUICK byte</title>
-    <link rel="stylesheet" href="menu-management.css">
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -84,7 +83,7 @@
                             <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="{0:C}" />
                             <asp:TemplateField HeaderText="Availability">
                                 <ItemTemplate>
-                                    <span style='<%# If(Convert.ToBoolean(Eval("Available")), "color:green;", "color:red;") %>'>
+                                    <span class='<%# If(Convert.ToBoolean(Eval("Available")), "status-active", "status-disabled") %>'>
                                         <%# If(Convert.ToBoolean(Eval("Available")), "Active", "Hidden") %>
                                     </span>
                                 </ItemTemplate>
@@ -93,7 +92,7 @@
                                 <ItemTemplate>
                                     <asp:Button ID="btnToggle" runat="server" Text='<%# If(Convert.ToBoolean(Eval("Available")), "Hide", "Show") %>' 
                                         CommandName="ToggleAvailable" CommandArgument='<%# Eval("ItemID") %>' CssClass="btn-view" style="padding:5px 10px; font-size:0.8rem;" />
-                                    <asp:Button ID="btnDelete" runat="server" Text="Delete" CommandName="Delete" CssClass="btn-delete" style="padding:5px 10px; font-size:0.8rem;" />
+                                    <asp:Button ID="btnDelete" runat="server" Text="Delete" CommandName="Delete" CssClass="btn-reset" style="padding:5px 10px; font-size:0.8rem;" />
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
@@ -105,7 +104,7 @@
             </div>
         </div>
         <footer>
-            <p>&copy; 2026 QUICK byte - Taste the speed</p>
+            <p>&copy; 2026 QUICK byte | Taste the speed</p>
             <p>Internet application development</p>
             <p>Mansoob-e-Zahra</p>
         </footer>
