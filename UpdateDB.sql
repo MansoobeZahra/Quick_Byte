@@ -57,3 +57,17 @@ BEGIN
     EXEC sp_rename 'Order', 'Order_QB';
 END
 GO
+
+-- 7. Rename remaining tables for consistency
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Customer') EXEC sp_rename 'Customer', 'Customer_QB';
+GO
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Restaurant') EXEC sp_rename 'Restaurant', 'Restaurant_QB';
+GO
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Rider') EXEC sp_rename 'Rider', 'Rider_QB';
+GO
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'MenuItem') EXEC sp_rename 'MenuItem', 'MenuItem_QB';
+GO
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'OrderItem') EXEC sp_rename 'OrderItem', 'OrderItem_QB';
+GO
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Payment') EXEC sp_rename 'Payment', 'Payment_QB';
+GO
