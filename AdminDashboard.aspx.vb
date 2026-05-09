@@ -71,12 +71,12 @@ Partial Class AdminDashboard
     Private Sub LoadRestaurantPerformance()
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            ' Query using LastRevenueReset to show revenue since reset
             Dim query As String = "SELECT r.RestaurantID, r.Name, r.Region, r.IsActive, " &
                                  "(SELECT COUNT(DISTINCT CustomerID) FROM Order_QB WHERE RestaurantID = r.RestaurantID) AS CustomerCount, " &
                                  "(SELECT COUNT(*) FROM Order_QB WHERE RestaurantID = r.RestaurantID AND OrderDate >= r.LastRevenueReset) AS OrderCount, " &
                                  "ISNULL((SELECT SUM(p.Amount) FROM Order_QB o JOIN Payment_QB p ON o.OrderID = p.OrderID " &
-                                 "        WHERE o.RestaurantID = r.RestaurantID AND o.OrderDate >= r.LastRevenueReset AND p.Status = 'Paid'), 0) AS Revenue " &
+                                 "        WHERE o.RestaurantID = r.RestaurantID AND o.OrderDate >= r.LastRevenueReset AND p.Status = 'Paid'), 0) AS Revenue, " &
+                                 "ISNULL((SELECT AVG(CAST(Rating AS DECIMAL(3,2))) FROM Feedback_QB WHERE TargetID = r.RestaurantID AND TargetType = 'Restaurant'), 0) AS AvgRating " &
                                  "FROM Restaurant_QB r"
             Using cmd As New SqlCommand(query, conn)
                 Dim dt As New System.Data.DataTable()
@@ -93,7 +93,8 @@ Partial Class AdminDashboard
         Using conn As New SqlConnection(connString)
             Dim query As String = "SELECT RiderID, Name, Region, Availability, IsActive, " &
                                  "(SELECT COUNT(*) FROM Order_QB WHERE RiderID = Rider_QB.RiderID AND Status = 'Confirmed' AND OrderDate >= Rider_QB.LastRevenueReset) AS Deliveries, " &
-                                 "ISNULL((SELECT SUM(50) FROM Order_QB WHERE RiderID = Rider_QB.RiderID AND Status = 'Confirmed' AND OrderDate >= Rider_QB.LastRevenueReset), 0) AS Revenue " &
+                                 "ISNULL((SELECT SUM(50) FROM Order_QB WHERE RiderID = Rider_QB.RiderID AND Status = 'Confirmed' AND OrderDate >= Rider_QB.LastRevenueReset), 0) AS Revenue, " &
+                                 "ISNULL((SELECT AVG(CAST(Rating AS DECIMAL(3,2))) FROM Feedback_QB WHERE TargetID = Rider_QB.RiderID AND TargetType = 'Rider'), 0) AS AvgRating " &
                                  "FROM Rider_QB"
             Using cmd As New SqlCommand(query, conn)
                 Dim dt As New System.Data.DataTable()

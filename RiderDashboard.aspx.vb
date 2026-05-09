@@ -11,18 +11,6 @@ Partial Class RiderDashboard
 
         If Not IsPostBack Then
             LoadRiderInfo()
-            LoadAssignedOrders()
-            LoadDeliveryHistory()
-        End If
-    End Sub
-
-    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If Not User.Identity.IsAuthenticated OrElse Session("Role") <> "Rider" Then
-            Response.Redirect("Default.aspx")
-        End If
-
-        If Not IsPostBack Then
-            LoadRiderInfo()
             RefreshGrids()
         End If
     End Sub
