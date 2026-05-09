@@ -20,7 +20,7 @@ Partial Class Orders
         
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT o.OrderID, c.FirstName + ' ' + c.LastName AS CustomerName, r.Name AS RestaurantName, o.Status, o.OrderDate FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant r ON o.RestaurantID = r.RestaurantID"
+            Dim query As String = "SELECT o.OrderID, c.FirstName + ' ' + c.LastName AS CustomerName, r.Name AS RestaurantName, o.Status, o.OrderDate FROM Order_QB o INNER JOIN Customer c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant r ON o.RestaurantID = r.RestaurantID"
             
             If role = "Customer" Then
                 query &= " WHERE o.CustomerID = @RefID"
