@@ -12,28 +12,35 @@ Partial Class Search
     End Sub
 
     Private Sub LoadUserRegion()
-        If User.Identity.IsAuthenticated Then
-            Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
-            Using conn As New SqlConnection(connString)
-                Dim query As String = "SELECT Region FROM Users_QB WHERE Email = @Email"
-                Using cmd As New SqlCommand(query, conn)
-                    cmd.Parameters.AddWithValue("@Email", User.Identity.Name)
-                    conn.Open()
-                    Dim reg As Object = cmd.ExecuteScalar()
-                    If reg IsNot Nothing Then
-                        Session("UserRegion") = reg.ToString()
-                        lblUserRegion.Text = reg.ToString()
-                    End If
+        If Not IsPostBack Then
+            If User.Identity.IsAuthenticated Then
+                Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
+                Using conn As New SqlConnection(connString)
+                    Dim query As String = "SELECT Region FROM Users_QB WHERE Email = @Email"
+                    Using cmd As New SqlCommand(query, conn)
+                        cmd.Parameters.AddWithValue("@Email", User.Identity.Name)
+                        conn.Open()
+                        Dim reg As Object = cmd.ExecuteScalar()
+                        If reg IsNot Nothing Then
+                            Session("UserRegion") = reg.ToString()
+                            ddlRegion.SelectedValue = reg.ToString()
+                        End If
+                    End Using
                 End Using
-            End Using
-        Else
-            Session("UserRegion") = "Islamabad" ' Default
-            lblUserRegion.Text = "Islamabad (Default)"
+            Else
+                ddlRegion.SelectedValue = "Islamabad"
+                Session("UserRegion") = "Islamabad"
+            End If
         End If
     End Sub
 
+    Protected Sub ddlRegion_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs)
+        Session("UserRegion") = ddlRegion.SelectedValue
+        LoadAllItems()
+    End Sub
+
     Private Sub LoadAllItems()
-        Dim region As String = If(Session("UserRegion") IsNot Nothing, Session("UserRegion").ToString(), "Islamabad")
+        Dim region As String = ddlRegion.SelectedValue
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
             Dim query As String = "SELECT m.ItemID, r.RestaurantID, m.Name AS ItemName, r.Name AS RestaurantName, m.Price, m.Description " &
