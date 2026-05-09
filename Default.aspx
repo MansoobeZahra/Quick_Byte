@@ -78,16 +78,19 @@
                             <p>View and manage orders based on your role</p>
                             <a href="Orders.aspx" class="btn">View Orders</a>
                         </div>
+                        <% If Session("Role") <> "Customer" Then %>
                         <div class="card">
                             <h3>Menu Management</h3>
                             <p>Manage restaurant menu items and pricing</p>
                             <a href="Menu.aspx" class="btn">Manage Menu</a>
                         </div>
+                        <% End If %>
+
                         <% If User.Identity.IsAuthenticated AndAlso (Session("Role") = "Admin" Or Session("Role") = "PlatformManager") Then %>
-                        <div class="card" style="border-top: 4px solid #ba1010;">
-                            <h3>Segmentation Dashboard</h3>
-                            <p>View advanced stakeholder analytics and segmentation</p>
-                            <a href="AdminDashboard.aspx" class="btn">Open Dashboard</a>
+                        <div class="card" style="border-top: 4px solid #ba1010; background: #fffcfc;">
+                            <h3>Admin Dashboard</h3>
+                            <p>Manage Regions, Stakeholders & Revenue Stats</p>
+                            <a href="AdminDashboard.aspx" class="btn" style="background:#ba1010;">Manage Network</a>
                         </div>
                         <% End If %>
                     </div>

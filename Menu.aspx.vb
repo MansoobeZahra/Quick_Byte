@@ -56,8 +56,30 @@ Partial Class MenuPage
         LoadMenu()
     End Sub
 
+    Protected Sub gvMenuItems_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs)
+        If e.CommandName = "ToggleAvailable" Then
+            Dim itemId As Integer = Convert.ToInt32(e.CommandArgument)
+            Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
+            Using conn As New SqlConnection(connString)
+                Dim query As String = "UPDATE MenuItem_QB SET Available = CASE WHEN Available = 1 THEN 0 ELSE 1 END WHERE ItemID = @ItemID"
+                Using cmd As New SqlCommand(query, conn)
+                    cmd.Parameters.AddWithValue("@ItemID", itemId)
+                    conn.Open()
+                    cmd.ExecuteNonQuery()
+                End Using
+            End Using
+            LoadMenu()
+        End If
+    End Sub
+
     Protected Sub gvMenuItems_RowDeleting(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewDeleteEventArgs)
+        ' Handled via RowCommand mostly, but keeping this for compatibility if needed
         Dim itemId As Integer = Convert.ToInt32(gvMenuItems.DataKeys(e.RowIndex).Value)
+        ExecuteDelete(itemId)
+        LoadMenu()
+    End Sub
+
+    Private Sub ExecuteDelete(ByVal itemId As Integer)
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
             Dim query As String = "DELETE FROM MenuItem_QB WHERE ItemID = @ItemID"
@@ -69,13 +91,12 @@ Partial Class MenuPage
                     lblMessage.Text = "Item deleted successfully."
                     lblMessage.ForeColor = System.Drawing.Color.Green
                 Catch ex As Exception
-                    lblMessage.Text = "Cannot delete item. It might be used in an order."
+                    lblMessage.Text = "Cannot delete item. It might be used in existing orders. Try hiding it instead."
                     lblMessage.ForeColor = System.Drawing.Color.Red
                 End Try
                 lblMessage.Visible = True
             End Using
         End Using
-        LoadMenu()
     End Sub
 
     Protected Sub lnkLogout_Click(ByVal sender As Object, ByVal e As System.EventArgs)

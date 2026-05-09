@@ -53,14 +53,17 @@
                     <h2><asp:Label ID="lblTitle" runat="server" Text="All Orders"></asp:Label></h2>
                     <asp:GridView ID="gvOrders" runat="server" AutoGenerateColumns="False" CssClass="orders-table" GridLines="None" OnRowCommand="gvOrders_RowCommand">
                         <Columns>
-                            <asp:BoundField DataField="OrderID" HeaderText="Order ID" />
+                            <asp:BoundField DataField="OrderID" HeaderText="Order #" />
                             <asp:BoundField DataField="CustomerName" HeaderText="Customer" />
                             <asp:BoundField DataField="RestaurantName" HeaderText="Restaurant" />
+                            <asp:BoundField DataField="Items" HeaderText="Items" />
                             <asp:BoundField DataField="Status" HeaderText="Status" />
-                            <asp:BoundField DataField="OrderDate" HeaderText="Order Date" DataFormatString="{0:yyyy-MM-dd}" />
+                            <asp:BoundField DataField="Region" HeaderText="City" />
                             <asp:TemplateField HeaderText="Actions">
                                 <ItemTemplate>
-                                    <asp:Button ID="btnView" runat="server" Text="View Details" CssClass="btn-view" CommandName="ViewOrder" CommandArgument='<%# Eval("OrderID") %>' />
+                                    <asp:Button ID="btnConfirm" runat="server" Text="Confirm Receipt" CommandName="ConfirmOrder" CommandArgument='<%# Eval("OrderID") %>' 
+                                        Visible='<%# Eval("Status").ToString() = "Delivered" AND Session("Role").ToString() = "Customer" %>' CssClass="btn-view" style="background:#28a745;" />
+                                    <asp:Label ID="lblConfirmed" runat="server" Text="✅ Completed" Visible='<%# Eval("Status").ToString() = "Confirmed" %>' ForeColor="Green" Font-Bold="true"></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
