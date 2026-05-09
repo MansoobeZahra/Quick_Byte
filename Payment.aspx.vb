@@ -26,7 +26,7 @@ Partial Class Payment
         Using conn As New SqlConnection(connString)
             Dim query As String = "SELECT o.OrderID, c.FirstName + ' ' + c.LastName AS CustomerName, r.Name AS RestaurantName, o.Status, " &
                                  "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem oi JOIN MenuItem mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount " &
-                                 "FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant r ON o.RestaurantID = r.RestaurantID " &
+                                 "FROM Order_QB o INNER JOIN Customer c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant r ON o.RestaurantID = r.RestaurantID " &
                                  "WHERE o.OrderID = @OrderID"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@OrderID", orderId)
@@ -61,7 +61,7 @@ Partial Class Payment
             Dim query As String = "SELECT p.PaymentID, p.OrderID, p.Method, p.Amount, p.PaymentDate, p.Status FROM Payment p "
             
             If role = "Customer" Then
-                query &= "INNER JOIN [Order] o ON p.OrderID = o.OrderID WHERE o.CustomerID = @RefID"
+                query &= "INNER JOIN Order_QB o ON p.OrderID = o.OrderID WHERE o.CustomerID = @RefID"
             End If
             
             query &= " ORDER BY p.PaymentDate DESC"
@@ -99,7 +99,7 @@ Partial Class Payment
                 End Using
 
                 ' 2. Update Order Status
-                Dim updateOrder As String = "UPDATE [Order] SET Status = 'Preparing' WHERE OrderID = @OrderID AND Status = 'Pending'"
+                Dim updateOrder As String = "UPDATE Order_QB SET Status = 'Preparing' WHERE OrderID = @OrderID AND Status = 'Pending'"
                 Using cmd As New SqlCommand(updateOrder, conn, transaction)
                     cmd.Parameters.AddWithValue("@OrderID", orderId)
                     cmd.ExecuteNonQuery()
