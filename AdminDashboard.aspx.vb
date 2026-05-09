@@ -30,7 +30,7 @@ Partial Class AdminDashboard
                                  "  ELSE 'Regular' " &
                                  "END AS Segment " &
                                  "FROM Customer c " &
-                                 "LEFT JOIN [Order] o ON c.CustomerID = o.CustomerID " &
+                                 "LEFT JOIN Order_QB o ON c.CustomerID = o.CustomerID " &
                                  "LEFT JOIN OrderItem oi ON o.OrderID = oi.OrderID " &
                                  "LEFT JOIN MenuItem mi ON oi.ItemID = mi.ItemID " &
                                  "LEFT JOIN (SELECT OrderID, SUM(Quantity) as total_items FROM OrderItem GROUP BY OrderID) item_counts ON o.OrderID = item_counts.OrderID " &
@@ -51,7 +51,7 @@ Partial Class AdminDashboard
         Using conn As New SqlConnection(connString)
             Dim query As String = "SELECT r.Name, COUNT(o.OrderID) AS OrderCount, ISNULL(SUM(mi.Price * oi.Quantity), 0) AS Revenue " &
                                  "FROM Restaurant r " &
-                                 "LEFT JOIN [Order] o ON r.RestaurantID = o.RestaurantID " &
+                                 "LEFT JOIN Order_QB o ON r.RestaurantID = o.RestaurantID " &
                                  "LEFT JOIN OrderItem oi ON o.OrderID = oi.OrderID " &
                                  "LEFT JOIN MenuItem mi ON oi.ItemID = mi.ItemID " &
                                  "GROUP BY r.RestaurantID, r.Name"
@@ -68,7 +68,7 @@ Partial Class AdminDashboard
     Private Sub LoadRiderActivity()
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT Name, Availability, (SELECT COUNT(*) FROM [Order] WHERE RiderID = Rider.RiderID AND Status = 'Delivered') AS Deliveries FROM Rider"
+            Dim query As String = "SELECT Name, Availability, (SELECT COUNT(*) FROM Order_QB WHERE RiderID = Rider.RiderID AND Status = 'Delivered') AS Deliveries FROM Rider"
             Using cmd As New SqlCommand(query, conn)
                 Dim dt As New System.Data.DataTable()
                 Dim da As New SqlDataAdapter(cmd)
