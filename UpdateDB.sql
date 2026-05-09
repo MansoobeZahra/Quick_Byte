@@ -165,18 +165,38 @@ END;
 GO
 
 -- ==========================================
--- 6. LIVE SAMPLE DATA & USERS
+-- 6. FEEDBACK SYSTEM
+-- ==========================================
+
+CREATE TABLE Feedback_QB (
+    FeedbackID INT IDENTITY(8001,1) PRIMARY KEY,
+    OrderID INT NOT NULL,
+    TargetType NVARCHAR(20) NOT NULL, -- 'Rider' or 'Restaurant'
+    TargetID INT NOT NULL,           -- RiderID or RestaurantID
+    ReviewerRole NVARCHAR(20) NOT NULL, -- 'Customer' or 'RestaurantManager'
+    ReviewerID INT NOT NULL,
+    Rating INT CHECK (Rating >= 1 AND Rating <= 5),
+    Comment NVARCHAR(MAX),
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    CONSTRAINT FK_Feedback_Order FOREIGN KEY (OrderID) REFERENCES Order_QB(OrderID)
+);
+
+GO
+
+-- ==========================================
+-- 7. LIVE SAMPLE DATA & USERS (UPDATED)
 -- ==========================================
 
 -- Populate Platform Managers
 INSERT INTO PlatformManager_QB (FullName, Department, Segment) VALUES ('Main Admin', 'Operations', 'SuperAdmin');
 INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID, Region) VALUES ('admin@quickbyte.com', 'Admin@123', 'PlatformManager', 1, 'Islamabad');
 
--- Populate Restaurants (Regions: Karachi, Lahore, Islamabad, Rawalpindi)
-INSERT INTO Restaurant_QB (Name, Street, City, Region, ContactNumber, Segment, IsActive) VALUES 
-('Pizza Palace','Main Road','Islamabad','Islamabad','0511111111', 'Standard', 1),
-('Lahore Grill','Mall Road','Lahore','Lahore','0421111111', 'Standard', 1),
-('Karachi Spice','Clifton','Karachi','Karachi','0211111111', 'Standard', 1);
+-- Populate Restaurants
+INSERT INTO Restaurant_QB (Name, Street, City, Region, ContactNumber, IsActive) VALUES 
+('Pizza Palace','Main Road','Islamabad','Islamabad','0511111111', 1),
+('Lahore Grill','Mall Road','Lahore','Lahore','0421111111', 1),
+('Karachi Spice','Clifton','Karachi','Karachi','0211111111', 1),
+('Rawal Roasters','Saddar','Rawalpindi','Rawalpindi','0512222222', 1);
 
 INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID, Region) 
 SELECT LOWER(REPLACE(Name, ' ', '')) + '@quickbyte.com', 'Rest@123', 'RestaurantManager', RestaurantID, Region FROM Restaurant_QB;
@@ -185,7 +205,8 @@ SELECT LOWER(REPLACE(Name, ' ', '')) + '@quickbyte.com', 'Rest@123', 'Restaurant
 INSERT INTO Rider_QB (Name, ContactNumber, Availability, Region, IsActive) VALUES 
 ('Ahmed','03450000001',1, 'Islamabad', 1), 
 ('Bilal','03450000002',1, 'Lahore', 1),
-('Zain','03450000003',1, 'Karachi', 1);
+('Zain','03450000003',1, 'Karachi', 1),
+('Usman','03450000004',1, 'Rawalpindi', 1);
 
 INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID, Region) 
 SELECT LOWER(Name) + '@rider.com', 'Rider@123', 'Rider', RiderID, Region FROM Rider_QB;
@@ -193,7 +214,9 @@ SELECT LOWER(Name) + '@rider.com', 'Rider@123', 'Rider', RiderID, Region FROM Ri
 -- Populate Customers
 INSERT INTO Customer_QB (FirstName, LastName, Email, PhoneNumber, Region) VALUES 
 ('Ali','Raza','ali@example.com','03001111111', 'Islamabad'), 
-('Sara','Khan','sara@example.com','03002222222', 'Lahore');
+('Sara','Khan','sara@example.com','03002222222', 'Lahore'),
+('Hamza','Sheikh','hamza@example.com','03003333333', 'Karachi'),
+('Fatima','Zahra','fatima@example.com','03004444444', 'Rawalpindi');
 
 INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID, Region) 
 SELECT Email, 'Customer@123', 'Customer', CustomerID, Region FROM Customer_QB;
@@ -201,12 +224,44 @@ SELECT Email, 'Customer@123', 'Customer', CustomerID, Region FROM Customer_QB;
 -- Populate Menu
 INSERT INTO MenuItem_QB (RestaurantID, Name, Description, Price, Available) VALUES 
 (3001, 'Pepperoni Pizza', 'Large pepperoni pizza', 1200, 1),
+(3001, 'Garlic Bread', '4 pieces cheesy garlic bread', 450, 1),
 (3002, 'Chicken Karahi', 'Spicy chicken karahi', 1500, 1),
-(3003, 'Sindhi Biryani', 'Authentic Sindhi biryani', 800, 1);
+(3002, 'Naan', 'Freshly baked tandoori naan', 50, 1),
+(3003, 'Sindhi Biryani', 'Authentic Sindhi biryani', 800, 1),
+(3003, 'Shami Kabab', 'Pack of 2 beef shami kababs', 300, 1),
+(3004, 'Chargha', 'Full tandoori chargha', 1800, 1);
 
--- Populate Initial Orders & Payments
+-- Populate Orders to trigger segments (Premium/Regular)
+-- Ali (Islamabad) - Premium Customer (Many orders)
 INSERT INTO Order_QB (CustomerID, RestaurantID, RiderID, Status, Region) VALUES (2001, 3001, 5001, 'Confirmed', 'Islamabad');
 INSERT INTO OrderItem_QB (OrderID, ItemID, Quantity) VALUES (6001, 4001, 2);
 INSERT INTO Payment_QB (OrderID, Method, Amount, Status) VALUES (6001, 'Cash', 2400, 'Paid');
+
+INSERT INTO Order_QB (CustomerID, RestaurantID, RiderID, Status, Region) VALUES (2001, 3001, 5001, 'Confirmed', 'Islamabad');
+INSERT INTO OrderItem_QB (OrderID, ItemID, Quantity) VALUES (6002, 4002, 5);
+INSERT INTO Payment_QB (OrderID, Method, Amount, Status) VALUES (6002, 'Online', 2250, 'Paid');
+
+-- Sara (Lahore) - Regular Customer
+INSERT INTO Order_QB (CustomerID, RestaurantID, RiderID, Status, Region) VALUES (2002, 3002, 5002, 'Confirmed', 'Lahore');
+INSERT INTO OrderItem_QB (OrderID, ItemID, Quantity) VALUES (6003, 4003, 1);
+INSERT INTO Payment_QB (OrderID, Method, Amount, Status) VALUES (6003, 'Cash', 1500, 'Paid');
+
+-- Hamza (Karachi) - Premium Customer (High spend)
+INSERT INTO Order_QB (CustomerID, RestaurantID, RiderID, Status, Region) VALUES (2003, 3003, 5003, 'Confirmed', 'Karachi');
+INSERT INTO OrderItem_QB (OrderID, ItemID, Quantity) VALUES (6004, 4005, 10); -- 10 Biryanis = 8000 (Premium)
+INSERT INTO Payment_QB (OrderID, Method, Amount, Status) VALUES (6004, 'Online', 8000, 'Paid');
+
+-- Sample Feedback
+-- Customer Ali rates Restaurant Pizza Palace
+INSERT INTO Feedback_QB (OrderID, TargetType, TargetID, ReviewerRole, ReviewerID, Rating, Comment)
+VALUES (6001, 'Restaurant', 3001, 'Customer', 2001, 5, 'Best pizza in Islamabad!');
+
+-- Customer Ali rates Rider Ahmed
+INSERT INTO Feedback_QB (OrderID, TargetType, TargetID, ReviewerRole, ReviewerID, Rating, Comment)
+VALUES (6001, 'Rider', 5001, 'Customer', 2001, 4, 'Fast delivery.');
+
+-- Restaurant Palace rates Rider Ahmed
+INSERT INTO Feedback_QB (OrderID, TargetType, TargetID, ReviewerRole, ReviewerID, Rating, Comment)
+VALUES (6001, 'Rider', 5001, 'RestaurantManager', 3001, 5, 'Very professional rider.');
 
 GO

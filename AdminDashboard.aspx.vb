@@ -18,6 +18,29 @@ Partial Class AdminDashboard
         LoadCustomerSegmentation()
         LoadRestaurantPerformance()
         LoadRiderActivity()
+        LoadFeedback()
+    End Sub
+
+    Private Sub LoadFeedback()
+        Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
+        Using conn As New SqlConnection(connString)
+            Dim query As String = "SELECT f.Rating, f.Comment, f.TargetType, " &
+                                 "CASE WHEN f.TargetType = 'Rider' THEN (SELECT Name FROM Rider_QB WHERE RiderID = f.TargetID) " &
+                                 "     ELSE (SELECT Name FROM Restaurant_QB WHERE RestaurantID = f.TargetID) END AS TargetName, " &
+                                 "CASE WHEN f.ReviewerRole = 'Customer' THEN (SELECT FirstName + ' ' + LastName FROM Customer_QB WHERE CustomerID = f.ReviewerID) " &
+                                 "     ELSE (SELECT Name FROM Restaurant_QB WHERE RestaurantID = f.ReviewerID) END AS Reviewer, " &
+                                 "o.Region " &
+                                 "FROM Feedback_QB f JOIN Order_QB o ON f.OrderID = o.OrderID " &
+                                 "ORDER BY f.CreatedAt DESC"
+            
+            Using cmd As New SqlCommand(query, conn)
+                Dim dt As New System.Data.DataTable()
+                Dim da As New SqlDataAdapter(cmd)
+                da.Fill(dt)
+                gvFeedback.DataSource = dt
+                gvFeedback.DataBind()
+            End Using
+        End Using
     End Sub
 
     Private Sub LoadCustomerSegmentation()

@@ -145,7 +145,7 @@
                             <asp:TemplateField HeaderText="Availability">
                                 <ItemTemplate>
                                     <span class='badge' style='<%# If(Convert.ToBoolean(Eval("Availability")), "background:#d4edda;color:#155724;", "background:#f8d7da;color:#721c24;") %>'>
-                                        <%# If(Convert.ToBoolean(Eval("Availability")), "🟢 Available", "🔴 Offline") %>
+                                        <%# If(Convert.ToBoolean(Eval("Availability")), "Available", "Offline") %>
                                     </span>
                                 </ItemTemplate>
                             </asp:TemplateField>
@@ -163,6 +163,30 @@
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>
+                    </asp:GridView>
+                </div>
+
+                <!-- Stakeholder Feedback -->
+                <div class="stat-card full-width" style="border-top: 2px solid #ba1010; margin-top: 20px;">
+                    <h2 style="color:#ba1010;">Stakeholder Ratings & Reviews</h2>
+                    <asp:GridView ID="gvFeedback" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None">
+                        <Columns>
+                            <asp:BoundField DataField="TargetName" HeaderText="Rated Entity" />
+                            <asp:BoundField DataField="TargetType" HeaderText="Role" />
+                            <asp:TemplateField HeaderText="Rating">
+                                <ItemTemplate>
+                                    <span class="badge" style='<%# If(Convert.ToInt32(Eval("Rating")) >= 4, "background:#d4edda;color:#155724;", "background:#fff3cd;color:#856404;") %>'>
+                                        <%# Eval("Rating") %> / 5 ⭐
+                                    </span>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:BoundField DataField="Comment" HeaderText="Review Comment" />
+                            <asp:BoundField DataField="Reviewer" HeaderText="By" />
+                            <asp:BoundField DataField="Region" HeaderText="City" />
+                        </Columns>
+                        <EmptyDataTemplate>
+                            <div class="no-results">No feedback submitted yet.</div>
+                        </EmptyDataTemplate>
                     </asp:GridView>
                 </div>
             </div>
