@@ -48,10 +48,10 @@ Partial Class RiderDashboard
 
     Private Sub UpdateStatusText()
         If chkAvailability.Checked Then
-            lblStatusText.Text = "Status: 🟢 Available"
+            lblStatusText.Text = "Available"
             lblStatusText.ForeColor = System.Drawing.Color.Green
         Else
-            lblStatusText.Text = "Status: 🔴 Offline"
+            lblStatusText.Text = "Offline"
             lblStatusText.ForeColor = System.Drawing.Color.Red
         End If
     End Sub

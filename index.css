@@ -1,5 +1,6 @@
 /* =============================
    QUICKBYTE - Global Stylesheet
+   Matches home page design
    ============================= */
 
 * {
@@ -10,8 +11,8 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #f4f4f4;
-    color: #222;
+    background-color: #fdf6e3;
+    color: #333;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -22,8 +23,8 @@ body {
    ============================= */
 
 .navbar {
-    background: #fff;
-    border-bottom: 3px solid #ba1010;
+    background: #ffffff;
+    border-bottom: 2px solid #ba1010;
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -35,11 +36,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
+    padding: 10px 24px;
 }
 
 .nav-logo {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
     color: #ba1010;
     text-decoration: none;
@@ -56,27 +57,16 @@ body {
 .nav-menu {
     list-style: none;
     display: flex;
-    gap: 25px;
+    gap: 22px;
     align-items: center;
 }
 
-.nav-menu a,
-.nav-menu asp\:LinkButton,
-.nav-menu a[id$="lnkLogout"] {
+.nav-menu li a,
+.nav-menu li a:visited {
     text-decoration: none;
     color: #ba1010;
     font-weight: bold;
     font-size: 14px;
-}
-
-.nav-menu input[type="submit"],
-.nav-menu a[href] {
-    background: none;
-    border: none;
-    color: #ba1010;
-    font-weight: bold;
-    font-size: 14px;
-    cursor: pointer;
 }
 
 .user-welcome {
@@ -89,145 +79,148 @@ body {
    ============================= */
 
 .container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 30px 20px;
+    padding: 28px 20px;
     flex: 1;
 }
 
 /* =============================
-   PAGE HEADER PANEL
-   Used on all inner pages
+   BOX  — the main visual unit
+   White rounded box, red border
+   Used for hero, panels, cards
    ============================= */
 
-.page-header {
-    background: #fff;
-    border-left: 5px solid #ba1010;
-    padding: 20px 25px;
-    margin-bottom: 25px;
-}
-
-.page-header h1 {
-    font-size: 22px;
-    color: #ba1010;
-    margin-bottom: 4px;
-}
-
-.page-header p {
-    color: #666;
-    font-size: 14px;
+.box {
+    background: #ffffff;
+    border: 1.5px solid #ba1010;
+    border-radius: 12px;
+    padding: 36px 32px;
+    margin-bottom: 22px;
 }
 
 /* =============================
-   CONTENT PANEL
-   White box for forms and tables
-   ============================= */
-
-.panel {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-top: 3px solid #ba1010;
-    padding: 25px;
-    margin-bottom: 25px;
-}
-
-.panel h2 {
-    font-size: 16px;
-    color: #ba1010;
-    margin-bottom: 18px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
-}
-
-/* Legacy wrappers - mapped to panel style */
-.login-wrapper, .form-wrapper, .menu-wrapper, .order-wrapper,
-.dashboard-wrapper, .search-wrapper, .payment-wrapper, .wrapper {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-top: 3px solid #ba1010;
-    padding: 30px;
-    margin-bottom: 25px;
-}
-
-/* =============================
-   HERO (Home Page)
+   HERO  (home page top banner)
    ============================= */
 
 .hero {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-top: 3px solid #ba1010;
-    padding: 50px 20px;
+    background: #ffffff;
+    border: 1.5px solid #ba1010;
+    border-radius: 12px;
+    padding: 50px 30px;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 22px;
 }
 
 .hero h1 {
     font-size: 32px;
     color: #ba1010;
     margin-bottom: 8px;
+    font-weight: bold;
 }
 
 .hero p {
-    color: #666;
-    margin-bottom: 25px;
-    font-size: 15px;
+    color: #ba1010;
+    font-size: 14px;
+    margin-bottom: 0;
+    opacity: 0.75;
 }
 
 .hero-logo {
     height: 80px;
-    margin-bottom: 15px;
+    display: block;
+    margin: 0 auto 16px auto;
 }
 
 .hero-buttons {
     display: flex;
-    gap: 15px;
+    gap: 14px;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.brand-logo {
-    height: 50px;
-    display: block;
-    margin-bottom: 15px;
-}
-
-.subtitle {
-    color: #666;
-    font-size: 14px;
-    margin-bottom: 20px;
+    margin-top: 22px;
 }
 
 /* =============================
-   CARDS (Home Page grid)
+   PAGE HEADER  (inner pages)
+   Same look as hero
+   ============================= */
+
+.page-header {
+    background: #ffffff;
+    border: 1.5px solid #ba1010;
+    border-radius: 12px;
+    padding: 32px 30px;
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.page-header h1 {
+    font-size: 26px;
+    color: #ba1010;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.page-header p {
+    color: #ba1010;
+    font-size: 13px;
+    opacity: 0.7;
+}
+
+/* =============================
+   CONTENT PANEL  (white box for forms/tables)
+   ============================= */
+
+.panel,
+.wrapper, .login-wrapper, .form-wrapper, .menu-wrapper,
+.order-wrapper, .dashboard-wrapper, .search-wrapper, .payment-wrapper {
+    background: #ffffff;
+    border: 1.5px solid #ba1010;
+    border-radius: 12px;
+    padding: 28px 30px;
+    margin-bottom: 22px;
+}
+
+.panel h2 {
+    font-size: 16px;
+    color: #ba1010;
+    font-weight: bold;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0d0d0;
+}
+
+/* =============================
+   CARDS  (feature grid on home)
    ============================= */
 
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 20px;
-    margin-top: 25px;
+    margin-top: 0;
 }
 
 .card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-top: 3px solid #ba1010;
-    padding: 25px;
+    background: #ffffff;
+    border: 1.5px solid #ba1010;
+    border-radius: 12px;
+    padding: 30px 24px;
     text-align: center;
 }
 
 .card h3 {
     color: #ba1010;
+    font-size: 17px;
+    font-weight: bold;
     margin-bottom: 10px;
-    font-size: 16px;
 }
 
 .card p {
-    color: #555;
-    font-size: 14px;
-    margin-bottom: 20px;
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 22px;
+    line-height: 1.5;
 }
 
 /* =============================
@@ -241,22 +234,92 @@ body {
 }
 
 .stat-card {
-    background: #fff;
-    border: 1px solid #ddd;
-    border-top: 3px solid #ba1010;
-    padding: 20px;
+    background: #ffffff;
+    border: 1.5px solid #ba1010;
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin-bottom: 0;
 }
 
 .stat-card h2 {
     font-size: 15px;
     color: #ba1010;
-    margin-bottom: 15px;
+    font-weight: bold;
+    margin-bottom: 14px;
     padding-bottom: 8px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f0d0d0;
 }
 
 .full-width {
     grid-column: 1 / -1;
+}
+
+/* =============================
+   BUTTONS
+   ============================= */
+
+/* Yellow primary — like "Open Dashboard" in screenshot */
+.btn, .btn-primary, .btn-add {
+    display: inline-block;
+    padding: 10px 28px;
+    background: #f8be2c;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Red outline secondary — like "View Orders" in screenshot */
+.btn-secondary {
+    display: inline-block;
+    padding: 9px 26px;
+    background: #ffffff;
+    color: #ba1010;
+    border: 2px solid #ba1010;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Small action button — tables */
+.btn-view {
+    display: inline-block;
+    padding: 5px 14px;
+    background: #f8be2c;
+    color: #333;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Small outline button — tables */
+.btn-reset {
+    display: inline-block;
+    padding: 5px 14px;
+    background: #ffffff;
+    color: #ba1010;
+    border: 1.5px solid #ba1010;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.btn-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
 }
 
 /* =============================
@@ -269,9 +332,9 @@ body {
 
 .form-group label {
     display: block;
-    font-weight: bold;
     font-size: 13px;
-    color: #444;
+    font-weight: bold;
+    color: #555;
     margin-bottom: 5px;
 }
 
@@ -282,10 +345,12 @@ input[type="number"], input[type="date"],
 select, textarea {
     width: 100%;
     padding: 9px 12px;
-    border: 1px solid #ccc;
+    border: 1px solid #d0a0a0;
+    border-radius: 6px;
     background: #fff;
     font-size: 14px;
     color: #333;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 input:focus, select:focus, textarea:focus {
@@ -302,77 +367,24 @@ input:focus, select:focus, textarea:focus {
 .checkbox-label {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 14px;
-}
-
-.btn-container {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: normal;
+    color: #444;
 }
 
 .remember-forgot {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
+    margin-bottom: 14px;
     font-size: 13px;
 }
 
 .remember-forgot a {
     color: #ba1010;
     text-decoration: none;
-}
-
-/* =============================
-   BUTTONS
-   ============================= */
-
-.btn, .btn-primary, .btn-add {
-    display: inline-block;
-    padding: 9px 22px;
-    background: #ba1010;
-    color: #fff;
-    border: none;
-    font-weight: bold;
-    font-size: 14px;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.btn-secondary {
-    display: inline-block;
-    padding: 9px 22px;
-    background: #fff;
-    color: #ba1010;
-    border: 1px solid #ba1010;
-    font-weight: bold;
-    font-size: 14px;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.btn-view {
-    display: inline-block;
-    padding: 5px 14px;
-    background: #f8be2c;
-    color: #222;
-    border: none;
-    font-weight: bold;
     font-size: 13px;
-    cursor: pointer;
-}
-
-.btn-reset {
-    display: inline-block;
-    padding: 5px 14px;
-    background: #fff;
-    color: #ba1010;
-    border: 1px solid #ba1010;
-    font-weight: bold;
-    font-size: 13px;
-    cursor: pointer;
 }
 
 /* =============================
@@ -383,40 +395,49 @@ input:focus, select:focus, textarea:focus {
 .history-table, .results-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px;
-    margin-top: 10px;
+    font-size: 13px;
+    margin-top: 5px;
 }
 
 .admin-table th, .orders-table th, .menu-table th,
 .history-table th, .results-table th {
     background: #ba1010;
-    color: #fff;
+    color: #ffffff;
     padding: 10px 14px;
     text-align: left;
-    font-size: 13px;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .admin-table td, .orders-table td, .menu-table td,
 .history-table td, .results-table td {
     padding: 10px 14px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f0d0d0;
     vertical-align: middle;
 }
 
-.admin-table tr:nth-child(even),
-.orders-table tr:nth-child(even),
-.menu-table tr:nth-child(even),
-.history-table tr:nth-child(even),
-.results-table tr:nth-child(even) {
-    background: #fafafa;
+.admin-table tr:last-child td,
+.orders-table tr:last-child td,
+.menu-table tr:last-child td,
+.history-table tr:last-child td,
+.results-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Round the table corners to fit inside the rounded panel */
+.admin-table, .orders-table, .menu-table,
+.history-table, .results-table {
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .no-results {
     padding: 20px;
     text-align: center;
-    color: #888;
-    font-size: 14px;
-    background: #fafafa;
+    color: #aaa;
+    font-size: 13px;
+    background: #fffaf5;
+    border-radius: 8px;
 }
 
 /* =============================
@@ -425,28 +446,43 @@ input:focus, select:focus, textarea:focus {
 
 .badge {
     padding: 3px 10px;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
     display: inline-block;
-    border: 1px solid #ccc;
+    border-radius: 20px;
 }
 
-.status-active  { color: #1a7a1a; font-weight: bold; }
+.status-active  { color: #2e7d32; font-weight: bold; }
 .status-disabled { color: #ba1010; font-weight: bold; }
-.badge-available { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
-.badge-offline   { background: #fce4ec; color: #c62828; border-color: #ef9a9a; }
-.badge-high      { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
-.badge-low       { background: #fff8e1; color: #f57f17; border-color: #ffe082; }
+.badge-available { background: #e8f5e9; color: #2e7d32; }
+.badge-offline   { background: #fce4ec; color: #c62828; }
+.badge-high      { background: #e8f5e9; color: #2e7d32; }
+.badge-low       { background: #fff8e1; color: #e65100; }
 .segment-premium { color: #ba1010; font-weight: bold; }
-.segment-regular { color: #555; }
+.segment-regular { color: #777; }
 
 /* =============================
-   LINKS SECTION
+   MISC
    ============================= */
 
+.subtitle {
+    color: #ba1010;
+    font-size: 13px;
+    opacity: 0.75;
+    margin-bottom: 12px;
+}
+
+.brand-logo {
+    height: 60px;
+    display: block;
+    margin: 0 auto 12px auto;
+}
+
 .links {
-    margin-top: 20px;
-    font-size: 14px;
+    margin-top: 18px;
+    font-size: 13px;
+    color: #666;
+    text-align: center;
 }
 
 .links a {
@@ -455,70 +491,37 @@ input:focus, select:focus, textarea:focus {
     font-weight: bold;
 }
 
-/* =============================
-   FOOTER
-   ============================= */
-
-footer {
-    background: #222;
-    color: #ccc;
-    text-align: center;
-    padding: 25px 20px;
-    font-size: 13px;
-    border-top: 3px solid #ba1010;
-    margin-top: auto;
-}
-
-footer p {
-    margin-bottom: 4px;
-}
-
-/* =============================
-   RIDER / PROFILE INFO
-   ============================= */
-
 .info-row {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     margin-bottom: 12px;
     font-size: 14px;
 }
 
 .info-row .label {
     font-weight: bold;
-    color: #444;
-    width: 120px;
+    color: #555;
+    width: 110px;
+    font-size: 13px;
 }
 
 /* =============================
-   MISC SECTIONS
+   FOOTER
    ============================= */
 
-.orders-table-section,
-.add-item-section,
-.menu-items-section,
-.assigned-orders,
-.delivery-history,
-.payment-info,
-.payment-history,
-.results-section {
-    margin-top: 25px;
+footer {
+    background: #fff8ee;
+    color: #888;
+    text-align: center;
+    padding: 22px 20px;
+    font-size: 12px;
+    border-top: 2px solid #ba1010;
+    margin-top: auto;
 }
 
-.orders-table-section h2,
-.add-item-section h2,
-.menu-items-section h2,
-.assigned-orders h2,
-.delivery-history h2,
-.payment-info h2,
-.payment-history h2,
-.results-section h2 {
-    font-size: 15px;
-    color: #ba1010;
-    margin-bottom: 12px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #e0e0e0;
+footer p {
+    margin-bottom: 3px;
 }
 
 /* =============================
@@ -528,19 +531,17 @@ footer p {
 @media (max-width: 768px) {
     .nav-container {
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
+        padding: 10px;
     }
 
     .nav-menu {
-        gap: 15px;
+        gap: 14px;
         flex-wrap: wrap;
         justify-content: center;
     }
 
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-
+    .dashboard-grid,
     .form-row {
         grid-template-columns: 1fr;
     }
@@ -548,5 +549,13 @@ footer p {
     .hero-buttons {
         flex-direction: column;
         align-items: center;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    .panel, .page-header, .hero, .card, .stat-card {
+        padding: 20px 18px;
     }
 }
