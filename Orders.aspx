@@ -62,7 +62,7 @@
                             <ItemTemplate>
                                 <asp:Button ID="btnConfirm" runat="server" Text="Confirm Receipt"
                                     CommandName="ConfirmOrder" CommandArgument='<%# Eval("OrderID") %>'
-                                    Visible='<%# Convert.ToString(Eval("Status")) = "Delivered" AndAlso Convert.ToString(Session("Role")) = "Customer" %>'
+                                    Visible='<%# CanConfirmOrder(Eval("Status")) %>'
                                     CssClass="btn-view" />
                                 <asp:Label ID="lblConfirmed" runat="server" Text="[Completed]"
                                     Visible='<%# Convert.ToString(Eval("Status")) = "Confirmed" %>'

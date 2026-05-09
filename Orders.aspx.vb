@@ -67,6 +67,12 @@ Partial Class Orders
         End If
     End Sub
 
+    Protected Function CanConfirmOrder(ByVal status As Object) As Boolean
+        Dim role As String = If(Session("Role") IsNot Nothing, Session("Role").ToString(), "")
+        Dim st As String = If(status IsNot Nothing, status.ToString(), "")
+        Return st = "Delivered" AndAlso role = "Customer"
+    End Function
+
     Protected Sub lnkLogout_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         FormsAuthentication.SignOut()
         Session.Clear()
