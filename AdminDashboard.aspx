@@ -40,7 +40,6 @@
                         <% ElseIf Session("Role") = "Rider" Then %>
                             <li><a href="RiderDashboard.aspx">Dashboard</a></li>
                         <% ElseIf Session("Role") = "Admin" Or Session("Role") = "PlatformManager" Then %>
-                            <li><a href="Search.aspx">Search</a></li>
                             <li><a href="Orders.aspx">All Orders</a></li>
                             <li><a href="AdminDashboard.aspx">Segmentation Dashboard</a></li>
                         <% End If %>
@@ -56,115 +55,107 @@
         </nav>
 
         <div class="container" style="max-width: 1200px;">
-            <header style="text-align: center; margin-bottom: 30px;">
-                <h1 style="color: #ba1010;">Business Segmentation Dashboard</h1>
-                <p>Real-time analytics and stakeholder management</p>
-            </header>
+            <div class="search-wrapper" style="background:transparent; padding:0; box-shadow:none;">
+                <img src="assets/logo.png" alt="QuickByte Logo" class="brand-logo" />
+                <h1 style="color: #ba1010; font-size: 2.5rem; margin-bottom: 5px;">Business Segmentation Dashboard</h1>
+                <p class="subtitle" style="margin-bottom: 30px;">Network-wide stakeholder analytics & logistics</p>
 
-            <!-- Admin Only: Add Restaurant -->
-            <div class="stat-card full-width" style="margin-bottom: 20px;">
-                <h2>Add New Restaurant</h2>
-                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 10px;">
-                    <asp:TextBox ID="txtNewRestName" runat="server" placeholder="Restaurant Name" CssClass="form-input"></asp:TextBox>
-                    <asp:TextBox ID="txtNewRestEmail" runat="server" placeholder="Email" CssClass="form-input"></asp:TextBox>
-                    <asp:TextBox ID="txtNewRestPhone" runat="server" placeholder="Phone" CssClass="form-input"></asp:TextBox>
-                    <asp:DropDownList ID="ddlNewRestRegion" runat="server" CssClass="form-input">
-                        <asp:ListItem Value="" Text="Select Region"></asp:ListItem>
-                        <asp:ListItem Value="Karachi" Text="Karachi"></asp:ListItem>
-                        <asp:ListItem Value="Lahore" Text="Lahore"></asp:ListItem>
-                        <asp:ListItem Value="Islamabad" Text="Islamabad"></asp:ListItem>
-                        <asp:ListItem Value="Rawalpindi" Text="Rawalpindi"></asp:ListItem>
-                    </asp:DropDownList>
-                    <asp:TextBox ID="txtNewRestAddress" runat="server" placeholder="Street Address" CssClass="form-input"></asp:TextBox>
-                    <asp:Button ID="btnAddRestaurant" runat="server" Text="Add Restaurant" CssClass="btn-add" OnClick="btnAddRestaurant_Click" />
-                </div>
-                <asp:Label ID="lblAdminMessage" runat="server" ForeColor="Green" Visible="false"></asp:Label>
-            </div>
-
-            <div class="dashboard-grid">
-                <!-- Customers Segmentation -->
-                <div class="stat-card full-width">
-                    <h2>Customer Segmentation & Region</h2>
-                    <asp:GridView ID="gvCustomerSegments" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None">
-                        <Columns>
-                            <asp:BoundField DataField="CustomerName" HeaderText="Customer" />
-                            <asp:BoundField DataField="Region" HeaderText="Region" />
-                            <asp:BoundField DataField="TotalOrders" HeaderText="Orders" />
-                            <asp:BoundField DataField="TotalSpent" HeaderText="Total Spent" DataFormatString="{0:C}" />
-                            <asp:TemplateField HeaderText="Segment">
-                                <ItemTemplate>
-                                    <span class='<%# GetSegmentClass(Eval("Segment")) %>'><%# Eval("Segment") %></span>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                    </asp:GridView>
-                </div>
-
-                <!-- Restaurants Performance -->
-                <div class="stat-card full-width">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <h2>Restaurant Performance & Revenue</h2>
-                        <asp:Button ID="btnResetRestRevenue" runat="server" Text="Reset All Revenue" CssClass="btn-reset" OnClick="btnResetRestRevenue_Click" OnClientClick="return confirm('Reset all restaurant revenue till today?');" />
+                <!-- Admin Only: Add Restaurant -->
+                <div class="stat-card full-width" style="margin-bottom: 30px; border: 1px solid #eee;">
+                    <h2 style="background: #fcf8ec; padding: 10px; margin: -20px -20px 20px -20px; border-radius: 10px 10px 0 0;">Add New Restaurant Partner</h2>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <asp:TextBox ID="txtNewRestName" runat="server" placeholder="Restaurant Name" CssClass="form-input"></asp:TextBox>
+                        <asp:TextBox ID="txtNewRestEmail" runat="server" placeholder="Manager Email" CssClass="form-input"></asp:TextBox>
+                        <asp:TextBox ID="txtNewRestPhone" runat="server" placeholder="Contact Number" CssClass="form-input"></asp:TextBox>
+                        <asp:DropDownList ID="ddlNewRestRegion" runat="server" CssClass="form-input">
+                            <asp:ListItem Value="" Text="Select City/Region"></asp:ListItem>
+                            <asp:ListItem Value="Karachi" Text="Karachi"></asp:ListItem>
+                            <asp:ListItem Value="Lahore" Text="Lahore"></asp:ListItem>
+                            <asp:ListItem Value="Islamabad" Text="Islamabad"></asp:ListItem>
+                            <asp:ListItem Value="Rawalpindi" Text="Rawalpindi"></asp:ListItem>
+                        </asp:DropDownList>
+                        <asp:TextBox ID="txtNewRestAddress" runat="server" placeholder="Street Address" CssClass="form-input"></asp:TextBox>
+                        <asp:Button ID="btnAddRestaurant" runat="server" Text="Register Restaurant" CssClass="btn-add" style="background:#ba1010;" OnClick="btnAddRestaurant_Click" />
                     </div>
-                    <asp:GridView ID="gvRestaurants" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None" DataKeyNames="RestaurantID" OnRowCommand="gvRestaurants_RowCommand">
-                        <Columns>
-                            <asp:BoundField DataField="Name" HeaderText="Restaurant" />
-                            <asp:BoundField DataField="Region" HeaderText="Region" />
-                            <asp:BoundField DataField="CustomerCount" HeaderText="Unique Customers" />
-                            <asp:BoundField DataField="OrderCount" HeaderText="Total Orders" />
-                            <asp:BoundField DataField="Revenue" HeaderText="Revenue (Since Reset)" DataFormatString="{0:C}" />
-                            <asp:TemplateField HeaderText="Status">
-                                <ItemTemplate>
-                                    <span style='<%# If(Convert.ToBoolean(Eval("IsActive")), "color:green;", "color:red;") %>'>
-                                        <%# If(Convert.ToBoolean(Eval("IsActive")), "Active", "Disabled") %>
-                                    </span>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Actions">
-                                <ItemTemplate>
-                                    <asp:Button ID="btnToggleRest" runat="server" Text='<%# If(Convert.ToBoolean(Eval("IsActive")), "Disable", "Enable") %>' 
-                                        CommandName="ToggleStatus" CommandArgument='<%# Eval("RestaurantID") %>' CssClass="btn-action" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                    </asp:GridView>
+                    <asp:Label ID="lblAdminMessage" runat="server" ForeColor="Green" Visible="false" style="display:block; margin-top:10px; font-weight:bold;"></asp:Label>
                 </div>
 
-                <!-- Riders Activity -->
-                <div class="stat-card full-width">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <h2>Rider Activity & Revenue</h2>
-                        <asp:Button ID="btnResetRiderRevenue" runat="server" Text="Reset All Revenue" CssClass="btn-reset" OnClick="btnResetRiderRevenue_Click" OnClientClick="return confirm('Reset all rider revenue till today?');" />
+                <div class="dashboard-grid">
+                    <!-- Customers Segmentation -->
+                    <div class="stat-card full-width">
+                        <h2>Customer Segmentation</h2>
+                        <asp:GridView ID="gvCustomerSegments" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None">
+                            <Columns>
+                                <asp:BoundField DataField="CustomerName" HeaderText="Customer" />
+                                <asp:BoundField DataField="Region" HeaderText="Region" />
+                                <asp:BoundField DataField="TotalOrders" HeaderText="Orders" />
+                                <asp:BoundField DataField="TotalSpent" HeaderText="Total Spent" DataFormatString="{0:C}" />
+                                <asp:TemplateField HeaderText="Segment">
+                                    <ItemTemplate>
+                                        <span class='<%# GetSegmentClass(Eval("Segment")) %>'><%# Eval("Segment") %></span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
                     </div>
-                    <asp:GridView ID="gvRiders" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None" DataKeyNames="RiderID" OnRowCommand="gvRiders_RowCommand">
-                        <Columns>
-                            <asp:BoundField DataField="Name" HeaderText="Rider" />
-                            <asp:BoundField DataField="Region" HeaderText="Region" />
-                            <asp:BoundField DataField="Deliveries" HeaderText="Deliveries" />
-                            <asp:BoundField DataField="Revenue" HeaderText="Earnings" DataFormatString="{0:C}" />
-                            <asp:TemplateField HeaderText="Availability">
-                                <ItemTemplate>
-                                    <span class='badge' style='<%# If(Convert.ToBoolean(Eval("Availability")), "background:#d4edda;color:#155724;", "background:#f8d7da;color:#721c24;") %>'>
-                                        <%# If(Convert.ToBoolean(Eval("Availability")), "Available", "Offline") %>
-                                    </span>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Status">
-                                <ItemTemplate>
-                                    <span style='<%# If(Convert.ToBoolean(Eval("IsActive")), "color:green;", "color:red;") %>'>
-                                        <%# If(Convert.ToBoolean(Eval("IsActive")), "Active", "Disabled") %>
-                                    </span>
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                            <asp:TemplateField HeaderText="Actions">
-                                <ItemTemplate>
-                                    <asp:Button ID="btnToggleRider" runat="server" Text='<%# If(Convert.ToBoolean(Eval("IsActive")), "Disable", "Enable") %>' 
-                                        CommandName="ToggleStatus" CommandArgument='<%# Eval("RiderID") %>' CssClass="btn-action" />
-                                </ItemTemplate>
-                            </asp:TemplateField>
-                        </Columns>
-                    </asp:GridView>
-                </div>
+
+                    <!-- Restaurants Performance -->
+                    <div class="stat-card full-width">
+                        <h2>Restaurant Revenue & Account Status</h2>
+                        <asp:GridView ID="gvRestaurants" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None" DataKeyNames="RestaurantID" OnRowCommand="gvRestaurants_RowCommand">
+                            <Columns>
+                                <asp:BoundField DataField="Name" HeaderText="Restaurant" />
+                                <asp:BoundField DataField="Region" HeaderText="Region" />
+                                <asp:BoundField DataField="OrderCount" HeaderText="Orders" />
+                                <asp:BoundField DataField="Revenue" HeaderText="Current Revenue" DataFormatString="{0:C}" />
+                                <asp:TemplateField HeaderText="Status">
+                                    <ItemTemplate>
+                                        <span style='<%# If(Convert.ToBoolean(Eval("IsActive")), "color:green;", "color:red;") %>'>
+                                            <%# If(Convert.ToBoolean(Eval("IsActive")), "Active", "Disabled") %>
+                                        </span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Actions">
+                                    <ItemTemplate>
+                                        <asp:Button ID="btnToggleRest" runat="server" Text='<%# If(Convert.ToBoolean(Eval("IsActive")), "Disable", "Enable") %>' 
+                                            CommandName="ToggleStatus" CommandArgument='<%# Eval("RestaurantID") %>' CssClass="btn-view" style="padding:4px 8px; font-size:0.75rem;" />
+                                        <asp:Button ID="btnResetRest" runat="server" Text="Reset Revenue" 
+                                            CommandName="ResetRevenue" CommandArgument='<%# Eval("RestaurantID") %>' CssClass="btn-reset" style="padding:4px 8px; font-size:0.75rem;" 
+                                            OnClientClick="return confirm('Clear revenue for this restaurant?');" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
+
+                    <!-- Riders Activity -->
+                    <div class="stat-card full-width">
+                        <h2>Rider Earnings & Dispatch Status</h2>
+                        <asp:GridView ID="gvRiders" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None" DataKeyNames="RiderID" OnRowCommand="gvRiders_RowCommand">
+                            <Columns>
+                                <asp:BoundField DataField="Name" HeaderText="Rider" />
+                                <asp:BoundField DataField="Region" HeaderText="Region" />
+                                <asp:BoundField DataField="Deliveries" HeaderText="Deliveries" />
+                                <asp:BoundField DataField="Revenue" HeaderText="Earnings" DataFormatString="{0:C}" />
+                                <asp:TemplateField HeaderText="Availability">
+                                    <ItemTemplate>
+                                        <span class='badge' style='<%# If(Convert.ToBoolean(Eval("Availability")), "background:#d4edda;color:#155724;", "background:#f8d7da;color:#721c24;") %>'>
+                                            <%# If(Convert.ToBoolean(Eval("Availability")), "Available", "Offline") %>
+                                        </span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Actions">
+                                    <ItemTemplate>
+                                        <asp:Button ID="btnToggleRider" runat="server" Text='<%# If(Convert.ToBoolean(Eval("IsActive")), "Disable", "Enable") %>' 
+                                            CommandName="ToggleStatus" CommandArgument='<%# Eval("RiderID") %>' CssClass="btn-view" style="padding:4px 8px; font-size:0.75rem;" />
+                                        <asp:Button ID="btnResetRider" runat="server" Text="Reset Earnings" 
+                                            CommandName="ResetRevenue" CommandArgument='<%# Eval("RiderID") %>' CssClass="btn-reset" style="padding:4px 8px; font-size:0.75rem;" 
+                                            OnClientClick="return confirm('Clear earnings for this rider?');" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                            </Columns>
+                        </asp:GridView>
+                    </div>
 
                 <!-- Stakeholder Feedback -->
                 <div class="stat-card full-width" style="border-top: 2px solid #ba1010; margin-top: 20px;">

@@ -49,12 +49,20 @@
                 <h1>QuickByte Search</h1>
                 <p class="subtitle">Find your favorite food</p>
 
-                <div class="search-box">
-                    <p style="text-align: center; color: #ba1010; font-weight: bold;">
-                        Showing restaurants in: <asp:Label ID="lblUserRegion" runat="server"></asp:Label>
-                    </p>
-                    <asp:TextBox ID="txtSearch" runat="server" placeholder="Search by Menu Item..." CssClass="search-input"></asp:TextBox>
-                    <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="btn-search" OnClick="btnSearch_Click" />
+                <div class="search-box" style="background: #fcf8ec; padding: 25px; border-radius: 10px; border: 1px solid #ba1010;">
+                    <div style="margin-bottom: 20px;">
+                        <label style="font-weight: bold; color: #ba1010; display: block; margin-bottom: 10px;">Select Your City:</label>
+                        <asp:DropDownList ID="ddlRegion" runat="server" CssClass="search-input" AutoPostBack="true" OnSelectedIndexChanged="ddlRegion_SelectedIndexChanged" style="width: 100%; border: 1px solid #ba1010;">
+                            <asp:ListItem Value="Karachi">Karachi</asp:ListItem>
+                            <asp:ListItem Value="Lahore">Lahore</asp:ListItem>
+                            <asp:ListItem Value="Islamabad">Islamabad</asp:ListItem>
+                            <asp:ListItem Value="Rawalpindi">Rawalpindi</asp:ListItem>
+                        </asp:DropDownList>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <asp:TextBox ID="txtSearch" runat="server" placeholder="What are you craving? (e.g. Pizza, Biryani)" CssClass="search-input" style="flex:1;"></asp:TextBox>
+                        <asp:Button ID="btnSearch" runat="server" Text="Search Menu" CssClass="btn-search" OnClick="btnSearch_Click" style="background:#ba1010;" />
+                    </div>
                 </div>
 
                 <div class="results-section">

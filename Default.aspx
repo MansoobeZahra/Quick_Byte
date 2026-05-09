@@ -29,7 +29,6 @@
                         <% ElseIf Session("Role") = "Rider" Then %>
                             <li><a href="RiderDashboard.aspx">Dashboard</a></li>
                         <% ElseIf Session("Role") = "Admin" Or Session("Role") = "PlatformManager" Then %>
-                            <li><a href="Search.aspx">Search</a></li>
                             <li><a href="Orders.aspx">All Orders</a></li>
                             <li><a href="AdminDashboard.aspx">Segmentation Dashboard</a></li>
                         <% End If %>
@@ -54,7 +53,9 @@
                     <% If Not User.Identity.IsAuthenticated Then %>
                         <a href="Register.aspx" class="btn-primary">Get Started</a>
                     <% End If %>
-                    <a href="Search.aspx" class="btn-secondary">Browse Restaurants</a>
+                    <% If Session("Role") <> "Admin" And Session("Role") <> "PlatformManager" Then %>
+                        <a href="Search.aspx" class="btn-secondary">Browse Restaurants</a>
+                    <% End If %>
                 </div>
             </section>
 
@@ -68,17 +69,19 @@
                             <p>Register as Customer, Restaurant Manager, or Delivery Rider</p>
                             <a href="Register.aspx" class="btn">Create Account</a>
                         </div>
+                        <% If Session("Role") <> "Admin" And Session("Role") <> "PlatformManager" Then %>
                         <div class="card">
                             <h3>Search Orders</h3>
                             <p>Search restaurants, and menu items</p>
                             <a href="Search.aspx" class="btn">Search</a>
                         </div>
+                        <% End If %>
                         <div class="card">
                             <h3>Order Management</h3>
                             <p>View and manage orders based on your role</p>
                             <a href="Orders.aspx" class="btn">View Orders</a>
                         </div>
-                        <% If Session("Role") <> "Customer" Then %>
+                        <% If Session("Role") = "RestaurantManager" Then %>
                         <div class="card">
                             <h3>Menu Management</h3>
                             <p>Manage restaurant menu items and pricing</p>

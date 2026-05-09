@@ -145,35 +145,30 @@ Partial Class AdminDashboard
     End Sub
 
     Protected Sub gvRestaurants_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
+        Dim restId As Integer = Convert.ToInt32(e.CommandArgument)
         If e.CommandName = "ToggleStatus" Then
-            Dim restId As Integer = Convert.ToInt32(e.CommandArgument)
-            ExecuteNonQuery("UPDATE Restaurant_QB SET IsActive = CASE WHEN IsActive = 1 THEN 0 ELSE 1 END WHERE RestaurantID = " & restId)
-            RefreshAllData()
+            ExecuteNonQuery("UPDATE Restaurant_QB SET IsActive = CASE WHEN IsActive = 1 THEN 0 ELSE 1 END WHERE RestaurantID = @ID", restId)
+        ElseIf e.CommandName = "ResetRevenue" Then
+            ExecuteNonQuery("UPDATE Restaurant_QB SET LastRevenueReset = GETDATE() WHERE RestaurantID = @ID", restId)
         End If
+        RefreshAllData()
     End Sub
 
     Protected Sub gvRiders_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
+        Dim riderId As Integer = Convert.ToInt32(e.CommandArgument)
         If e.CommandName = "ToggleStatus" Then
-            Dim riderId As Integer = Convert.ToInt32(e.CommandArgument)
-            ExecuteNonQuery("UPDATE Rider_QB SET IsActive = CASE WHEN IsActive = 1 THEN 0 ELSE 1 END WHERE RiderID = " & riderId)
-            RefreshAllData()
+            ExecuteNonQuery("UPDATE Rider_QB SET IsActive = CASE WHEN IsActive = 1 THEN 0 ELSE 1 END WHERE RiderID = @ID", riderId)
+        ElseIf e.CommandName = "ResetRevenue" Then
+            ExecuteNonQuery("UPDATE Rider_QB SET LastRevenueReset = GETDATE() WHERE RiderID = @ID", riderId)
         End If
-    End Sub
-
-    Protected Sub btnResetRestRevenue_Click(ByVal sender As Object, ByVal e As EventArgs)
-        ExecuteNonQuery("UPDATE Restaurant_QB SET LastRevenueReset = GETDATE()")
         RefreshAllData()
     End Sub
 
-    Protected Sub btnResetRiderRevenue_Click(ByVal sender As Object, ByVal e As EventArgs)
-        ExecuteNonQuery("UPDATE Rider_QB SET LastRevenueReset = GETDATE()")
-        RefreshAllData()
-    End Sub
-
-    Private Sub ExecuteNonQuery(ByVal query As String)
+    Private Sub ExecuteNonQuery(ByVal query As String, ByVal id As Integer)
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
             Using cmd As New SqlCommand(query, conn)
+                cmd.Parameters.AddWithValue("@ID", id)
                 conn.Open()
                 cmd.ExecuteNonQuery()
             End Using
