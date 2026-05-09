@@ -43,6 +43,7 @@
 
         <div class="container">
             <div class="page-header">
+                <img src="assets/logo.png" alt="QuickByte Logo" class="hero-logo" />
                 <h1>Search Menu</h1>
                 <p>Browse restaurants and food items by city</p>
             </div>

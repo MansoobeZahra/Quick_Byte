@@ -28,6 +28,7 @@
 
         <div class="container">
             <div class="page-header">
+                <img src="assets/logo.png" alt="QuickByte Logo" class="hero-logo" />
                 <h1>Business Segmentation Dashboard</h1>
                 <p>Network-wide analytics for customers, restaurants, and riders</p>
             </div>

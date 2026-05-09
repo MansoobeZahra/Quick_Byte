@@ -43,6 +43,7 @@
 
         <div class="container">
             <div class="page-header">
+                <img src="assets/logo.png" alt="QuickByte Logo" class="hero-logo" />
                 <h1><asp:Label ID="lblTitle" runat="server" Text="Orders"></asp:Label></h1>
                 <p>View and manage order history and status</p>
             </div>
