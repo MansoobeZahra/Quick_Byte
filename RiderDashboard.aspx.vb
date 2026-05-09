@@ -16,24 +16,40 @@ Partial Class RiderDashboard
         End If
     End Sub
 
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not User.Identity.IsAuthenticated OrElse Session("Role") <> "Rider" Then
+            Response.Redirect("Default.aspx")
+        End If
+
+        If Not IsPostBack Then
+            LoadRiderInfo()
+            RefreshGrids()
+        End If
+    End Sub
+
+    Private Sub RefreshGrids()
+        LoadAvailableOrders()
+        LoadAssignedOrders()
+        LoadDeliveryHistory()
+    End Sub
+
     Private Sub LoadRiderInfo()
         Dim refId As Integer = Convert.ToInt32(Session("ReferenceID"))
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT RiderID, Name, ContactNumber, Availability FROM Rider_QB WHERE RiderID = @RefID"
+            Dim query As String = "SELECT RiderID, Name, Region, Availability, IsActive FROM Rider_QB WHERE RiderID = @RefID"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@RefID", refId)
                 conn.Open()
                 Using reader As SqlDataReader = cmd.ExecuteReader()
                     If reader.Read() Then
-                        litRiderInfo.Text = String.Format(
-                            "<div class='info-card'>" &
-                            "<div class='info-row'><span class='label'>Rider ID:</span><span class='value'>{0}</span></div>" &
-                            "<div class='info-row'><span class='label'>Name:</span><span class='value'>{1}</span></div>" &
-                            "<div class='info-row'><span class='label'>Contact:</span><span class='value'>{2}</span></div>" &
-                            "</div>",
-                            reader("RiderID"), reader("Name"), reader("ContactNumber"))
-                        
+                        If Not Convert.ToBoolean(reader("IsActive")) Then
+                            FormsAuthentication.SignOut()
+                            Response.Redirect("Login.aspx?msg=AccountDisabled")
+                        End If
+                        lblRegion.Text = reader("Region").ToString()
+                        lblRegionTitle.Text = reader("Region").ToString()
+                        Session("RiderRegion") = reader("Region").ToString()
                         chkAvailability.Checked = Convert.ToBoolean(reader("Availability"))
                         UpdateStatusText()
                     End If
@@ -44,27 +60,60 @@ Partial Class RiderDashboard
 
     Private Sub UpdateStatusText()
         If chkAvailability.Checked Then
-            lblStatusText.Text = "Available"
-            lblStatusText.CssClass = "status-available"
+            lblStatusText.Text = "Status: 🟢 Available"
+            lblStatusText.ForeColor = System.Drawing.Color.Green
         Else
-            lblStatusText.Text = "Unavailable"
-            lblStatusText.CssClass = "status-unavailable"
+            lblStatusText.Text = "Status: 🔴 Offline"
+            lblStatusText.ForeColor = System.Drawing.Color.Red
         End If
     End Sub
 
     Protected Sub chkAvailability_CheckedChanged(ByVal sender As Object, ByVal e As EventArgs)
         Dim refId As Integer = Convert.ToInt32(Session("ReferenceID"))
+        ExecuteNonQuery("UPDATE Rider_QB SET Availability = " & If(chkAvailability.Checked, "1", "0") & " WHERE RiderID = " & refId)
+        UpdateStatusText()
+        LoadAvailableOrders()
+    End Sub
+
+    Private Sub LoadAvailableOrders()
+        If Not chkAvailability.Checked Then
+            gvAvailableOrders.DataSource = Nothing
+            gvAvailableOrders.DataBind()
+            Return
+        End If
+
+        Dim region As String = Session("RiderRegion")
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "UPDATE Rider_QB SET Availability = @Available WHERE RiderID = @RefID"
+            Dim query As String = "SELECT o.OrderID, r.Name AS RestaurantName, " &
+                                 "(SELECT STUFF((SELECT ', ' + mi.Name FROM OrderItem_QB oi JOIN MenuItem_QB mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID FOR XML PATH('')), 1, 2, '')) AS Items " &
+                                 "FROM Order_QB o JOIN Restaurant_QB r ON o.RestaurantID = r.RestaurantID " &
+                                 "WHERE o.Status = 'Pending' AND o.Region = @Region"
             Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Available", chkAvailability.Checked)
-                cmd.Parameters.AddWithValue("@RefID", refId)
-                conn.Open()
-                cmd.ExecuteNonQuery()
+                cmd.Parameters.AddWithValue("@Region", region)
+                Dim dt As New System.Data.DataTable()
+                Dim da As New SqlDataAdapter(cmd)
+                da.Fill(dt)
+                gvAvailableOrders.DataSource = dt
+                gvAvailableOrders.DataBind()
             End Using
         End Using
-        UpdateStatusText()
+    End Sub
+
+    Protected Sub gvAvailableOrders_RowCommand(ByVal sender As Object, ByVal e As GridViewCommandEventArgs)
+        If e.CommandName = "PickOrder" Then
+            Dim orderId As Integer = Convert.ToInt32(e.CommandArgument)
+            Dim refId As Integer = Convert.ToInt32(Session("ReferenceID"))
+            
+            ' Assign order to rider and update status
+            ExecuteNonQuery("UPDATE Order_QB SET RiderID = " & refId & ", Status = 'Assigned' WHERE OrderID = " & orderId)
+            ' Make rider unavailable once they pick an order
+            ExecuteNonQuery("UPDATE Rider_QB SET Availability = 0 WHERE RiderID = " & refId)
+            chkAvailability.Checked = False
+            UpdateStatusText()
+            
+            RefreshGrids()
+        End If
     End Sub
 
     Private Sub LoadAssignedOrders()
@@ -72,11 +121,9 @@ Partial Class RiderDashboard
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
             Dim query As String = "SELECT o.OrderID, c.FirstName + ' ' + c.LastName + '<br/><small>' + c.PhoneNumber + '</small>' AS CustomerInfo, " &
-                                 "r.Name + '<br/><small>' + r.Street + '</small>' AS RestaurantInfo, " &
-                                 "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem_QB oi JOIN MenuItem_QB mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount, " &
-                                 "o.Status " &
+                                 "r.Name + '<br/><small>' + r.Street + '</small>' AS RestaurantInfo, o.Status " &
                                  "FROM Order_QB o INNER JOIN Customer_QB c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant_QB r ON o.RestaurantID = r.RestaurantID " &
-                                 "WHERE o.RiderID = @RefID AND o.Status IN ('Preparing', 'Picked Up')"
+                                 "WHERE o.RiderID = @RefID AND o.Status IN ('Assigned', 'Picked Up', 'Delivered')"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@RefID", refId)
                 Dim dt As New System.Data.DataTable()
@@ -85,13 +132,10 @@ Partial Class RiderDashboard
                 gvAssignedOrders.DataSource = dt
                 gvAssignedOrders.DataBind()
 
-                ' Set dropdown values
                 For Each row As GridViewRow In gvAssignedOrders.Rows
                     Dim status As String = dt.Rows(row.RowIndex)("Status").ToString()
                     Dim ddl As DropDownList = CType(row.FindControl("ddlStatus"), DropDownList)
-                    If ddl IsNot Nothing Then
-                        ddl.SelectedValue = status
-                    End If
+                    If ddl IsNot Nothing Then ddl.SelectedValue = status
                 Next
             End Using
         End Using
@@ -102,32 +146,18 @@ Partial Class RiderDashboard
         Dim row As GridViewRow = CType(btn.NamingContainer, GridViewRow)
         Dim orderId As Integer = Convert.ToInt32(gvAssignedOrders.DataKeys(row.RowIndex).Value)
         Dim ddl As DropDownList = CType(row.FindControl("ddlStatus"), DropDownList)
-        Dim newStatus As String = ddl.SelectedValue
-
-        Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
-        Using conn As New SqlConnection(connString)
-            Dim query As String = "UPDATE Order_QB SET Status = @Status WHERE OrderID = @OrderID"
-            Using cmd As New SqlCommand(query, conn)
-                cmd.Parameters.AddWithValue("@Status", newStatus)
-                cmd.Parameters.AddWithValue("@OrderID", orderId)
-                conn.Open()
-                cmd.ExecuteNonQuery()
-            End Using
-        End Using
-
-        LoadAssignedOrders()
-        LoadDeliveryHistory()
+        
+        ExecuteNonQuery("UPDATE Order_QB SET Status = '" & ddl.SelectedValue & "' WHERE OrderID = " & orderId)
+        RefreshGrids()
     End Sub
 
     Private Sub LoadDeliveryHistory()
         Dim refId As Integer = Convert.ToInt32(Session("ReferenceID"))
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT o.OrderID, o.OrderDate, c.FirstName + ' ' + c.LastName AS CustomerName, " &
-                                 "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem_QB oi JOIN MenuItem_QB mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount, " &
-                                 "o.Status " &
+            Dim query As String = "SELECT o.OrderID, o.OrderDate, c.FirstName + ' ' + c.LastName AS CustomerName, o.Status " &
                                  "FROM Order_QB o INNER JOIN Customer_QB c ON o.CustomerID = c.CustomerID " &
-                                 "WHERE o.RiderID = @RefID AND o.Status IN ('Delivered', 'Cancelled') ORDER BY o.OrderDate DESC"
+                                 "WHERE o.RiderID = @RefID AND o.Status = 'Confirmed' ORDER BY o.OrderDate DESC"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@RefID", refId)
                 Dim dt As New System.Data.DataTable()
@@ -135,6 +165,16 @@ Partial Class RiderDashboard
                 da.Fill(dt)
                 gvDeliveryHistory.DataSource = dt
                 gvDeliveryHistory.DataBind()
+            End Using
+        End Using
+    End Sub
+
+    Private Sub ExecuteNonQuery(ByVal query As String)
+        Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
+        Using conn As New SqlConnection(connString)
+            Using cmd As New SqlCommand(query, conn)
+                conn.Open()
+                cmd.ExecuteNonQuery()
             End Using
         End Using
     End Sub
