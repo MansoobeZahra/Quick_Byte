@@ -75,7 +75,7 @@ Partial Class RiderDashboard
                                  "r.Name + '<br/><small>' + r.Street + '</small>' AS RestaurantInfo, " &
                                  "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem oi JOIN MenuItem mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount, " &
                                  "o.Status " &
-                                 "FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant r ON o.RestaurantID = r.RestaurantID " &
+                                 "FROM Order_QB o INNER JOIN Customer c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant r ON o.RestaurantID = r.RestaurantID " &
                                  "WHERE o.RiderID = @RefID AND o.Status IN ('Preparing', 'Picked Up')"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@RefID", refId)
@@ -106,7 +106,7 @@ Partial Class RiderDashboard
 
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "UPDATE [Order] SET Status = @Status WHERE OrderID = @OrderID"
+            Dim query As String = "UPDATE Order_QB SET Status = @Status WHERE OrderID = @OrderID"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@Status", newStatus)
                 cmd.Parameters.AddWithValue("@OrderID", orderId)
@@ -126,7 +126,7 @@ Partial Class RiderDashboard
             Dim query As String = "SELECT o.OrderID, o.OrderDate, c.FirstName + ' ' + c.LastName AS CustomerName, " &
                                  "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem oi JOIN MenuItem mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount, " &
                                  "o.Status " &
-                                 "FROM [Order] o INNER JOIN Customer c ON o.CustomerID = c.CustomerID " &
+                                 "FROM Order_QB o INNER JOIN Customer c ON o.CustomerID = c.CustomerID " &
                                  "WHERE o.RiderID = @RefID AND o.Status IN ('Delivered', 'Cancelled') ORDER BY o.OrderDate DESC"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@RefID", refId)
