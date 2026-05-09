@@ -46,9 +46,9 @@
                 <div style="margin-top: 20px; padding: 15px; background: #fcf8ec; border: 1px solid #ba1010; border-radius: 10px; font-size: 13px; text-align: left;">
                     <h3 style="color: #ba1010; margin-bottom: 10px; font-size: 15px;">Test Credentials:</h3>
                     <p><strong>Admin:</strong> admin@quickbyte.com / Admin@123</p>
-                    <p><strong>Customer:</strong> ali1@example.com / Customer@123</p>
-                    <p><strong>Restaurant:</strong> pizzapalace@restaurant.com / Restaurant@123</p>
-                    <p><strong>Rider:</strong> ahmed5001@rider.com / Rider@123</p>
+                    <p><strong>Customer:</strong> ali@example.com / Customer@123</p>
+                    <p><strong>Restaurant:</strong> pizzapalace@quickbyte.com / Rest@123</p>
+                    <p><strong>Rider:</strong> ahmed@rider.com / Rider@123</p>
                 </div>
             </div>
         </div>

@@ -264,4 +264,21 @@ VALUES (6001, 'Rider', 5001, 'Customer', 2001, 4, 'Fast delivery.');
 INSERT INTO Feedback_QB (OrderID, TargetType, TargetID, ReviewerRole, ReviewerID, Rating, Comment)
 VALUES (6001, 'Rider', 5001, 'RestaurantManager', 3001, 5, 'Very professional rider.');
 
+-- More Sample Feedback
+-- Sara rates Savour Foods
+INSERT INTO Feedback_QB (OrderID, TargetType, TargetID, ReviewerRole, ReviewerID, Rating, Comment)
+VALUES (6003, 'Restaurant', 3002, 'Customer', 2002, 4, 'Great taste, but could be spicier.');
+
+-- Hamza rates Student Biryani
+INSERT INTO Feedback_QB (OrderID, TargetType, TargetID, ReviewerRole, ReviewerID, Rating, Comment)
+VALUES (6004, 'Restaurant', 3003, 'Customer', 2003, 5, 'Authentic Karachi Biryani!');
+
+-- Sara rates Rider Bilal
+INSERT INTO Feedback_QB (OrderID, TargetType, TargetID, ReviewerRole, ReviewerID, Rating, Comment)
+VALUES (6003, 'Rider', 5002, 'Customer', 2002, 3, 'Took a bit long to find the address.');
+
+-- Hamza rates Rider Zain
+INSERT INTO Feedback_QB (OrderID, TargetType, TargetID, ReviewerRole, ReviewerID, Rating, Comment)
+VALUES (6004, 'Rider', 5003, 'Customer', 2003, 5, 'Super fast delivery in Karachi traffic!');
+
 GO

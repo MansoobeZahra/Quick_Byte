@@ -60,44 +60,71 @@
             </section>
 
             <main>
-                <!-- Main Features -->
-                <section class="features-section">
-                    <h2 class="section-title">Main Features</h2>
+                <h2 class="section-title">Your QuickByte Workspace</h2>
+                
+                <% If Not User.Identity.IsAuthenticated Then %>
                     <div class="card-grid">
                         <div class="card">
-                            <h3>Registration</h3>
-                            <p>Register as Customer, Restaurant Manager, or Delivery Rider</p>
-                            <a href="Register.aspx" class="btn">Create Account</a>
+                            <h3>Welcome to QuickByte</h3>
+                            <p>Register now to start ordering food or join as a partner.</p>
+                            <a href="Register.aspx" class="btn">Get Started</a>
                         </div>
-                        <% If Session("Role") <> "Admin" And Session("Role") <> "PlatformManager" Then %>
-                        <div class="card">
-                            <h3>Search Orders</h3>
-                            <p>Search restaurants, and menu items</p>
-                            <a href="Search.aspx" class="btn">Search</a>
-                        </div>
-                        <% End If %>
-                        <div class="card">
-                            <h3>Order Management</h3>
-                            <p>View and manage orders based on your role</p>
-                            <a href="Orders.aspx" class="btn">View Orders</a>
-                        </div>
-                        <% If Session("Role") = "RestaurantManager" Then %>
-                        <div class="card">
-                            <h3>Menu Management</h3>
-                            <p>Manage restaurant menu items and pricing</p>
-                            <a href="Menu.aspx" class="btn">Manage Menu</a>
-                        </div>
-                        <% End If %>
-
-                        <% If User.Identity.IsAuthenticated AndAlso (Session("Role") = "Admin" Or Session("Role") = "PlatformManager") Then %>
-                        <div class="card" style="border-top: 4px solid #ba1010; background: #fffcfc;">
-                            <h3>Admin Dashboard</h3>
-                            <p>Manage Regions, Stakeholders & Revenue Stats</p>
-                            <a href="AdminDashboard.aspx" class="btn" style="background:#ba1010;">Manage Network</a>
-                        </div>
-                        <% End If %>
                     </div>
-                </section>
+                <% Else %>
+                    <% If Session("Role") = "Customer" Then %>
+                        <div class="card-grid">
+                            <div class="card">
+                                <h3>Search & Order</h3>
+                                <p>Browse regional menus and place orders instantly.</p>
+                                <a href="Search.aspx" class="btn">Start Ordering</a>
+                            </div>
+                            <div class="card">
+                                <h3>My Orders</h3>
+                                <p>Track your food from the kitchen to your doorstep.</p>
+                                <a href="Orders.aspx" class="btn">Track Orders</a>
+                            </div>
+                        </div>
+                    <% ElseIf Session("Role") = "RestaurantManager" Then %>
+                        <div class="card-grid">
+                            <div class="card">
+                                <h3>Menu Management</h3>
+                                <p>Update your offerings and pricing in real-time.</p>
+                                <a href="Menu.aspx" class="btn">Manage Menu</a>
+                            </div>
+                            <div class="card">
+                                <h3>Order Fulfilment</h3>
+                                <p>Process incoming orders for your region.</p>
+                                <a href="Orders.aspx" class="btn">Process Orders</a>
+                            </div>
+                        </div>
+                    <% ElseIf Session("Role") = "Rider" Then %>
+                        <div class="card-grid">
+                            <div class="card">
+                                <h3>Rider Dashboard</h3>
+                                <p>Manage your availability and delivery queue.</p>
+                                <a href="RiderDashboard.aspx" class="btn">Open Dashboard</a>
+                            </div>
+                            <div class="card">
+                                <h3>Earnings</h3>
+                                <p>Track your daily deliveries and revenue.</p>
+                                <a href="RiderDashboard.aspx" class="btn">View Earnings</a>
+                            </div>
+                        </div>
+                    <% ElseIf Session("Role") = "Admin" Or Session("Role") = "PlatformManager" Then %>
+                        <div class="card-grid">
+                            <div class="card" style="border-top: 4px solid #ba1010;">
+                                <h3>Segmentation</h3>
+                                <p>Analyze regional stakeholder performance.</p>
+                                <a href="AdminDashboard.aspx" class="btn">Admin Console</a>
+                            </div>
+                            <div class="card">
+                                <h3>Logistics</h3>
+                                <p>Oversee network-wide delivery operations.</p>
+                                <a href="Orders.aspx" class="btn">All Orders</a>
+                            </div>
+                        </div>
+                    <% End If %>
+                <% End If %>
             </main>
         </div>
 
