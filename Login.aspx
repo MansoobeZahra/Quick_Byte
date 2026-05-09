@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - QUICK byte</title>
-    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <form id="form1" runat="server">
@@ -36,19 +36,19 @@
                     <a href="#">Forgot Password?</a>
                 </div>
 
-                <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="btn-login" OnClick="btnLogin_Click" />
+                <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="btn" style="width:100%;" OnClick="btnLogin_Click" />
 
                 <div class="links">
                     <p>Don't have an account? <a href="Register.aspx">Register here</a></p>
                     <p><a href="Default.aspx">Back to Home</a></p>
                 </div>
 
-                <div style="margin-top: 20px; padding: 15px; background: #fcf8ec; border: 1px solid #ba1010; border-radius: 10px; font-size: 13px; text-align: left;">
+                <div style="margin-top: 20px; padding: 15px; background: #fcf8ec; border: 1px solid #ba1010; font-size: 13px; text-align: left;">
                     <h3 style="color: #ba1010; margin-bottom: 10px; font-size: 15px;">Test Credentials:</h3>
-                    <p><strong>Admin:</strong> admin@quickbyte.com / Admin@123</p>
-                    <p><strong>Customer:</strong> ali@example.com / Customer@123</p>
-                    <p><strong>Restaurant:</strong> pizzapalace@quickbyte.com / Rest@123</p>
-                    <p><strong>Rider:</strong> ahmed@rider.com / Rider@123</p>
+                    <p><strong>Admin:</strong> admin@quickbyte.com | Admin@123</p>
+                    <p><strong>Customer:</strong> ali@example.com | Customer@123</p>
+                    <p><strong>Restaurant:</strong> pizzapalace@quickbyte.com | Rest@123</p>
+                    <p><strong>Rider:</strong> ahmed@rider.com | Rider@123</p>
                 </div>
             </div>
         </div>
