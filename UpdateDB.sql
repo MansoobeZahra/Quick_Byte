@@ -50,3 +50,10 @@ BEGIN
     VALUES ('admin@quickbyte.com', 'Admin@123', 'Admin', NULL);
 END
 GO
+
+-- 6. Rename Order table to Order_QB
+IF EXISTS (SELECT * FROM sys.tables WHERE name = 'Order')
+BEGIN
+    EXEC sp_rename 'Order', 'Order_QB';
+END
+GO
