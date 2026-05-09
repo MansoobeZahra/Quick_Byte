@@ -61,8 +61,8 @@
                             <asp:TemplateField HeaderText="Actions">
                                 <ItemTemplate>
                                     <asp:Button ID="btnConfirm" runat="server" Text="Confirm Receipt" CommandName="ConfirmOrder" CommandArgument='<%# Eval("OrderID") %>' 
-                                        Visible='<%# Eval("Status").ToString() = "Delivered" AND Session("Role").ToString() = "Customer" %>' CssClass="btn-view" style="background:#28a745;" />
-                                    <asp:Label ID="lblConfirmed" runat="server" Text="✅ Completed" Visible='<%# Eval("Status").ToString() = "Confirmed" %>' ForeColor="Green" Font-Bold="true"></asp:Label>
+                                        Visible='<%# Convert.ToString(Eval("Status")) = "Delivered" AndAlso Convert.ToString(Session("Role")) = "Customer" %>' CssClass="btn-view" style="background:#28a745;" />
+                                    <asp:Label ID="lblConfirmed" runat="server" Text="✅ Completed" Visible='<%# Convert.ToString(Eval("Status")) = "Confirmed" %>' ForeColor="Green" Font-Bold="true"></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
                         </Columns>

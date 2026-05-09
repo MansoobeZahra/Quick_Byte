@@ -183,7 +183,7 @@
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
                                             <b style="color:#f8be2c;">
-                                                <%# Eval("AvgRating", "{0:F1}" ) %>
+                                                <%# Eval("AvgRating", "{0:F1}") %> ●
                                             </b>
                                         </ItemTemplate>
                                     </asp:TemplateField>
@@ -226,7 +226,7 @@
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
                                             <b style="color:#f8be2c;">
-                                                <%# Eval("AvgRating", "{0:F1}" ) %>
+                                                <%# Eval("AvgRating", "{0:F1}") %> ●
                                             </b>
                                         </ItemTemplate>
                                     </asp:TemplateField>
