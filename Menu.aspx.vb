@@ -18,7 +18,7 @@ Partial Class MenuPage
         Dim refId As Integer = Convert.ToInt32(Session("ReferenceID"))
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT ItemID, Name, Description, Price, Available FROM MenuItem WHERE RestaurantID = @RefID"
+            Dim query As String = "SELECT ItemID, Name, Description, Price, Available FROM MenuItem_QB WHERE RestaurantID = @RefID"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@RefID", refId)
                 Dim dt As New System.Data.DataTable()
@@ -34,7 +34,7 @@ Partial Class MenuPage
         Dim refId As Integer = Convert.ToInt32(Session("ReferenceID"))
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "INSERT INTO MenuItem (RestaurantID, Name, Description, Price, Available) VALUES (@RestaurantID, @Name, @Description, @Price, @Available)"
+            Dim query As String = "INSERT INTO MenuItem_QB (RestaurantID, Name, Description, Price, Available) VALUES (@RestaurantID, @Name, @Description, @Price, @Available)"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@RestaurantID", refId)
                 cmd.Parameters.AddWithValue("@Name", txtItemName.Text.Trim())
@@ -60,7 +60,7 @@ Partial Class MenuPage
         Dim itemId As Integer = Convert.ToInt32(gvMenuItems.DataKeys(e.RowIndex).Value)
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "DELETE FROM MenuItem WHERE ItemID = @ItemID"
+            Dim query As String = "DELETE FROM MenuItem_QB WHERE ItemID = @ItemID"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@ItemID", itemId)
                 conn.Open()
