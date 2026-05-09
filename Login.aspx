@@ -43,8 +43,8 @@
                     <p><a href="Default.aspx">Back to Home</a></p>
                 </div>
 
-                <div style="margin-top: 20px; padding: 15px; background: #fcf8ec; border: 1px solid #ba1010; font-size: 13px; text-align: left;">
-                    <h3 style="color: #ba1010; margin-bottom: 10px; font-size: 15px;">Test Credentials:</h3>
+                <div class="stat-card" style="margin-top: 20px; font-size: 13px; text-align: left;">
+                    <h3 style="margin-bottom: 10px; font-size: 15px;">Test Credentials:</h3>
                     <p><strong>Admin:</strong> admin@quickbyte.com | Admin@123</p>
                     <p><strong>Customer:</strong> ali@example.com | Customer@123</p>
                     <p><strong>Restaurant:</strong> pizzapalace@quickbyte.com | Rest@123</p>

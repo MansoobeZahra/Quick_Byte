@@ -48,7 +48,7 @@
                 <h1>QuickByte Search</h1>
                 <p class="subtitle">Find your favorite food</p>
 
-                <div class="search-box" style="background: #fcf8ec; padding: 25px; border: 1px solid #ba1010;">
+                <div class="stat-card" style="margin-bottom: 30px;">
                     <div style="margin-bottom: 20px;">
                         <label style="font-weight: bold; color: #ba1010; display: block; margin-bottom: 10px;">Select Your City:</label>
                         <asp:DropDownList ID="ddlRegion" runat="server" CssClass="form-input" AutoPostBack="true" OnSelectedIndexChanged="ddlRegion_SelectedIndexChanged">

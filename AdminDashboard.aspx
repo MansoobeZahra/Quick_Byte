@@ -50,7 +50,7 @@
             </nav>
 
             <div class="container">
-                <div class="search-wrapper" style="background:transparent; padding:0; border:none;">
+                <div class="dashboard-wrapper">
                     <img src="assets/logo.png" alt="QuickByte Logo" class="brand-logo" />
                     <h1>Business Segmentation Dashboard</h1>
                     <p class="subtitle">Network-wide stakeholder analytics & logistics</p>
