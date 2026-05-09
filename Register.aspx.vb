@@ -25,7 +25,7 @@ Partial Class Register
             conn.Open()
             
             ' Check if email exists
-            Dim checkQuery As String = "SELECT COUNT(*) FROM Users WHERE Email = @Email"
+            Dim checkQuery As String = "SELECT COUNT(*) FROM Users_QB WHERE Email = @Email"
             Using checkCmd As New SqlCommand(checkQuery, conn)
                 checkCmd.Parameters.AddWithValue("@Email", email)
                 If Convert.ToInt32(checkCmd.ExecuteScalar()) > 0 Then
@@ -70,7 +70,7 @@ Partial Class Register
                 End If
 
                 ' Now insert into Users
-                Dim insertUser As String = "INSERT INTO Users (Email, PasswordHash, Role, ReferenceID) VALUES (@Email, @Password, @Role, @RefID)"
+                Dim insertUser As String = "INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID) VALUES (@Email, @Password, @Role, @RefID)"
                 Using cmd As New SqlCommand(insertUser, conn, transaction)
                     cmd.Parameters.AddWithValue("@Email", email)
                     cmd.Parameters.AddWithValue("@Password", password) ' In a real app, hash this!

@@ -19,7 +19,7 @@ Partial Class Login
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT UserID, Role, ReferenceID FROM Users WHERE Email = @Email AND PasswordHash = @Password"
+            Dim query As String = "SELECT UserID, Role, ReferenceID FROM Users_QB WHERE Email = @Email AND PasswordHash = @Password"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@Email", email)
                 cmd.Parameters.AddWithValue("@Password", password)

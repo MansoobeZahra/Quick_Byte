@@ -2,9 +2,9 @@ USE FoodserviceDB;
 GO
 
 -- 1. Create a centralized Users table for RBAC and authentication
-IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Users')
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Users_QB')
 BEGIN
-    CREATE TABLE Users (
+    CREATE TABLE Users_QB (
         UserID INT IDENTITY(1,1) PRIMARY KEY,
         Email NVARCHAR(100) UNIQUE NOT NULL,
         PasswordHash NVARCHAR(255) NOT NULL,
@@ -15,38 +15,38 @@ END
 GO
 
 -- 2. Migrate existing Customers to Users
-INSERT INTO Users (Email, PasswordHash, Role, ReferenceID)
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
 SELECT Email, 'Customer@123', 'Customer', CustomerID
 FROM Customer
-WHERE Email NOT IN (SELECT Email FROM Users);
+WHERE Email NOT IN (SELECT Email FROM Users_QB);
 GO
 
 -- 3. We can add default logins for Restaurants
-INSERT INTO Users (Email, PasswordHash, Role, ReferenceID)
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
 SELECT 
     LOWER(REPLACE(Name, ' ', '')) + '@restaurant.com', 
     'Restaurant@123', 
     'RestaurantManager', 
     RestaurantID
 FROM Restaurant
-WHERE LOWER(REPLACE(Name, ' ', '')) + '@restaurant.com' NOT IN (SELECT Email FROM Users);
+WHERE LOWER(REPLACE(Name, ' ', '')) + '@restaurant.com' NOT IN (SELECT Email FROM Users_QB);
 GO
 
 -- 4. Default logins for Riders
-INSERT INTO Users (Email, PasswordHash, Role, ReferenceID)
+INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
 SELECT 
     LOWER(REPLACE(Name, ' ', '')) + CAST(RiderID AS NVARCHAR) + '@rider.com', 
     'Rider@123', 
     'Rider', 
     RiderID
 FROM Rider
-WHERE LOWER(REPLACE(Name, ' ', '')) + CAST(RiderID AS NVARCHAR) + '@rider.com' NOT IN (SELECT Email FROM Users);
+WHERE LOWER(REPLACE(Name, ' ', '')) + CAST(RiderID AS NVARCHAR) + '@rider.com' NOT IN (SELECT Email FROM Users_QB);
 GO
 
 -- 5. Default Admin User
-IF NOT EXISTS (SELECT * FROM Users WHERE Role = 'Admin')
+IF NOT EXISTS (SELECT * FROM Users_QB WHERE Role = 'Admin')
 BEGIN
-    INSERT INTO Users (Email, PasswordHash, Role, ReferenceID)
+    INSERT INTO Users_QB (Email, PasswordHash, Role, ReferenceID)
     VALUES ('admin@quickbyte.com', 'Admin@123', 'Admin', NULL);
 END
 GO
