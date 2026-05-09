@@ -53,7 +53,7 @@ Partial Class Payment
     End Sub
 
     Private Sub LoadPaymentHistory()
-        Dim role As String = Session("Role")?.ToString()
+        Dim role As String = If(Session("Role") IsNot Nothing, Session("Role").ToString(), "")
         Dim refId As Integer = If(Session("ReferenceID") IsNot Nothing, Convert.ToInt32(Session("ReferenceID")), 0)
         
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
