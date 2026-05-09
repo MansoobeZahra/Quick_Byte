@@ -20,7 +20,7 @@ Partial Class RiderDashboard
         Dim refId As Integer = Convert.ToInt32(Session("ReferenceID"))
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT RiderID, Name, ContactNumber, Availability FROM Rider WHERE RiderID = @RefID"
+            Dim query As String = "SELECT RiderID, Name, ContactNumber, Availability FROM Rider_QB WHERE RiderID = @RefID"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@RefID", refId)
                 conn.Open()
@@ -56,7 +56,7 @@ Partial Class RiderDashboard
         Dim refId As Integer = Convert.ToInt32(Session("ReferenceID"))
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "UPDATE Rider SET Availability = @Available WHERE RiderID = @RefID"
+            Dim query As String = "UPDATE Rider_QB SET Availability = @Available WHERE RiderID = @RefID"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@Available", chkAvailability.Checked)
                 cmd.Parameters.AddWithValue("@RefID", refId)
@@ -73,9 +73,9 @@ Partial Class RiderDashboard
         Using conn As New SqlConnection(connString)
             Dim query As String = "SELECT o.OrderID, c.FirstName + ' ' + c.LastName + '<br/><small>' + c.PhoneNumber + '</small>' AS CustomerInfo, " &
                                  "r.Name + '<br/><small>' + r.Street + '</small>' AS RestaurantInfo, " &
-                                 "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem oi JOIN MenuItem mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount, " &
+                                 "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem_QB oi JOIN MenuItem_QB mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount, " &
                                  "o.Status " &
-                                 "FROM Order_QB o INNER JOIN Customer c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant r ON o.RestaurantID = r.RestaurantID " &
+                                 "FROM Order_QB o INNER JOIN Customer_QB c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant_QB r ON o.RestaurantID = r.RestaurantID " &
                                  "WHERE o.RiderID = @RefID AND o.Status IN ('Preparing', 'Picked Up')"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@RefID", refId)
@@ -124,9 +124,9 @@ Partial Class RiderDashboard
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
             Dim query As String = "SELECT o.OrderID, o.OrderDate, c.FirstName + ' ' + c.LastName AS CustomerName, " &
-                                 "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem oi JOIN MenuItem mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount, " &
+                                 "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem_QB oi JOIN MenuItem_QB mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount, " &
                                  "o.Status " &
-                                 "FROM Order_QB o INNER JOIN Customer c ON o.CustomerID = c.CustomerID " &
+                                 "FROM Order_QB o INNER JOIN Customer_QB c ON o.CustomerID = c.CustomerID " &
                                  "WHERE o.RiderID = @RefID AND o.Status IN ('Delivered', 'Cancelled') ORDER BY o.OrderDate DESC"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@RefID", refId)

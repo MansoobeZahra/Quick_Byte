@@ -13,6 +13,7 @@ Partial Class AdminDashboard
             LoadCustomerSegmentation()
             LoadRestaurantPerformance()
             LoadRiderActivity()
+            LoadPlatformManagers()
         End If
     End Sub
 
@@ -49,7 +50,12 @@ Partial Class AdminDashboard
     Private Sub LoadRestaurantPerformance()
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT r.Name, COUNT(o.OrderID) AS OrderCount, ISNULL(SUM(mi.Price * oi.Quantity), 0) AS Revenue " &
+            Dim query As String = "SELECT r.Name, COUNT(o.OrderID) AS OrderCount, ISNULL(SUM(mi.Price * oi.Quantity), 0) AS Revenue, " &
+                                 "CASE " &
+                                 "  WHEN ISNULL(SUM(mi.Price * oi.Quantity), 0) > 10000 THEN 'Top Performance' " &
+                                 "  WHEN COUNT(o.OrderID) < 5 THEN 'Needs Attention' " &
+                                 "  ELSE 'Standard' " &
+                                 "END AS Segment " &
                                  "FROM Restaurant_QB r " &
                                  "LEFT JOIN Order_QB o ON r.RestaurantID = o.RestaurantID " &
                                  "LEFT JOIN OrderItem_QB oi ON o.OrderID = oi.OrderID " &
@@ -68,7 +74,13 @@ Partial Class AdminDashboard
     Private Sub LoadRiderActivity()
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT Name, Availability, (SELECT COUNT(*) FROM Order_QB WHERE RiderID = Rider.RiderID AND Status = 'Delivered') AS Deliveries FROM Rider_QB"
+            Dim query As String = "SELECT Name, Availability, " &
+                                 "(SELECT COUNT(*) FROM Order_QB WHERE RiderID = Rider_QB.RiderID AND Status = 'Delivered') AS Deliveries, " &
+                                 "CASE " &
+                                 "  WHEN (SELECT COUNT(*) FROM Order_QB WHERE RiderID = Rider_QB.RiderID AND Status = 'Delivered') > 20 THEN 'Elite Rider' " &
+                                 "  ELSE 'Standard Rider' " &
+                                 "END AS Segment " &
+                                 "FROM Rider_QB"
             Using cmd As New SqlCommand(query, conn)
                 Dim dt As New System.Data.DataTable()
                 Dim da As New SqlDataAdapter(cmd)
@@ -79,12 +91,29 @@ Partial Class AdminDashboard
         End Using
     End Sub
 
+    Private Sub LoadPlatformManagers()
+        Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
+        Using conn As New SqlConnection(connString)
+            Dim query As String = "SELECT FullName, Department, Segment FROM PlatformManager_QB"
+            Using cmd As New SqlCommand(query, conn)
+                Dim dt As New System.Data.DataTable()
+                Dim da As New SqlDataAdapter(cmd)
+                da.Fill(dt)
+                gvPlatformManagers.DataSource = dt
+                gvPlatformManagers.DataBind()
+            End Using
+        End Using
+    End Sub
+
     Protected Function GetSegmentClass(ByVal segment As Object) As String
-        Select Case segment.ToString()
-            Case "Premium"
+        Dim seg As String = If(segment IsNot Nothing, segment.ToString(), "")
+        Select Case seg
+            Case "Premium", "Top Performance", "Elite Rider"
                 Return "segment-premium"
             Case "Bulk Buyer"
                 Return "segment-bulk"
+            Case "Needs Attention"
+                Return "segment-bulk" ' Use red for attention
             Case Else
                 Return "segment-regular"
         End Select

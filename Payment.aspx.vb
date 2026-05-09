@@ -25,8 +25,8 @@ Partial Class Payment
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
             Dim query As String = "SELECT o.OrderID, c.FirstName + ' ' + c.LastName AS CustomerName, r.Name AS RestaurantName, o.Status, " &
-                                 "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem oi JOIN MenuItem mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount " &
-                                 "FROM Order_QB o INNER JOIN Customer c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant r ON o.RestaurantID = r.RestaurantID " &
+                                 "(SELECT SUM(mi.Price * oi.Quantity) FROM OrderItem_QB oi JOIN MenuItem_QB mi ON oi.ItemID = mi.ItemID WHERE oi.OrderID = o.OrderID) AS TotalAmount " &
+                                 "FROM Order_QB o INNER JOIN Customer_QB c ON o.CustomerID = c.CustomerID INNER JOIN Restaurant_QB r ON o.RestaurantID = r.RestaurantID " &
                                  "WHERE o.OrderID = @OrderID"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@OrderID", orderId)
@@ -58,7 +58,7 @@ Partial Class Payment
         
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT p.PaymentID, p.OrderID, p.Method, p.Amount, p.PaymentDate, p.Status FROM Payment p "
+            Dim query As String = "SELECT p.PaymentID, p.OrderID, p.Method, p.Amount, p.PaymentDate, p.Status FROM Payment_QB p "
             
             If role = "Customer" Then
                 query &= "INNER JOIN Order_QB o ON p.OrderID = o.OrderID WHERE o.CustomerID = @RefID"
@@ -90,7 +90,7 @@ Partial Class Payment
             Dim transaction As SqlTransaction = conn.BeginTransaction()
             Try
                 ' 1. Insert Payment record
-                Dim insertPayment As String = "INSERT INTO Payment (OrderID, Method, Amount, Status) VALUES (@OrderID, @Method, @Amount, 'Paid')"
+                Dim insertPayment As String = "INSERT INTO Payment_QB (OrderID, Method, Amount, Status) VALUES (@OrderID, @Method, @Amount, 'Paid')"
                 Using cmd As New SqlCommand(insertPayment, conn, transaction)
                     cmd.Parameters.AddWithValue("@OrderID", orderId)
                     cmd.Parameters.AddWithValue("@Method", method)

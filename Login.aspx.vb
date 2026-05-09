@@ -49,7 +49,7 @@ Partial Class Login
                                 Response.Redirect("Menu.aspx")
                             Case "Rider"
                                 Response.Redirect("RiderDashboard.aspx")
-                            Case "Admin"
+                            Case "Admin", "PlatformManager"
                                 Response.Redirect("AdminDashboard.aspx")
                             Case Else
                                 Response.Redirect("Default.aspx")

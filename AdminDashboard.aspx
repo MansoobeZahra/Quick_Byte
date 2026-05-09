@@ -62,21 +62,26 @@
                     </asp:GridView>
                 </div>
 
-                <!-- Restaurants Performance -->
+                <!-- Restaurants Performance & Segmentation -->
                 <div class="stat-card">
-                    <h2>Restaurant Performance</h2>
+                    <h2>Restaurant Performance & Segmentation</h2>
                     <asp:GridView ID="gvRestaurants" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None">
                         <Columns>
                             <asp:BoundField DataField="Name" HeaderText="Restaurant" />
                             <asp:BoundField DataField="OrderCount" HeaderText="Orders" />
                             <asp:BoundField DataField="Revenue" HeaderText="Revenue" DataFormatString="{0:C}" />
+                            <asp:TemplateField HeaderText="Segment">
+                                <ItemTemplate>
+                                    <span class='<%# GetSegmentClass(Eval("Segment")) %>'><%# Eval("Segment") %></span>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                         </Columns>
                     </asp:GridView>
                 </div>
 
-                <!-- Riders Activity -->
+                <!-- Riders Activity & Segmentation -->
                 <div class="stat-card">
-                    <h2>Rider Activity</h2>
+                    <h2>Rider Activity & Segmentation</h2>
                     <asp:GridView ID="gvRiders" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None">
                         <Columns>
                             <asp:BoundField DataField="Name" HeaderText="Rider" />
@@ -86,6 +91,23 @@
                                     <%# If(Convert.ToBoolean(Eval("Availability")), "Available", "Offline") %>
                                 </ItemTemplate>
                             </asp:TemplateField>
+                            <asp:TemplateField HeaderText="Segment">
+                                <ItemTemplate>
+                                    <span class='<%# GetSegmentClass(Eval("Segment")) %>'><%# Eval("Segment") %></span>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
+                </div>
+
+                <!-- Platform Managers -->
+                <div class="stat-card full-width">
+                    <h2>Platform Managers (Administrative Users)</h2>
+                    <asp:GridView ID="gvPlatformManagers" runat="server" AutoGenerateColumns="False" CssClass="admin-table" GridLines="None">
+                        <Columns>
+                            <asp:BoundField DataField="FullName" HeaderText="Name" />
+                            <asp:BoundField DataField="Department" HeaderText="Department" />
+                            <asp:BoundField DataField="Segment" HeaderText="Access Level" />
                         </Columns>
                     </asp:GridView>
                 </div>

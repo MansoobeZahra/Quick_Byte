@@ -13,7 +13,7 @@ Partial Class Search
     Private Sub LoadAllItems()
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT m.Name AS ItemName, r.Name AS RestaurantName, m.Price, m.Description FROM MenuItem m INNER JOIN Restaurant r ON m.RestaurantID = r.RestaurantID WHERE m.Available = 1"
+            Dim query As String = "SELECT m.Name AS ItemName, r.Name AS RestaurantName, m.Price, m.Description FROM MenuItem_QB m INNER JOIN Restaurant_QB r ON m.RestaurantID = r.RestaurantID WHERE m.Available = 1"
             Using cmd As New SqlCommand(query, conn)
                 Dim dt As New System.Data.DataTable()
                 Dim da As New SqlDataAdapter(cmd)
@@ -29,7 +29,7 @@ Partial Class Search
         
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
-            Dim query As String = "SELECT m.Name AS ItemName, r.Name AS RestaurantName, m.Price, m.Description FROM MenuItem m INNER JOIN Restaurant r ON m.RestaurantID = r.RestaurantID WHERE m.Available = 1 AND (m.Name LIKE @Search OR r.Name LIKE @Search)"
+            Dim query As String = "SELECT m.Name AS ItemName, r.Name AS RestaurantName, m.Price, m.Description FROM MenuItem_QB m INNER JOIN Restaurant_QB r ON m.RestaurantID = r.RestaurantID WHERE m.Available = 1 AND (m.Name LIKE @Search OR r.Name LIKE @Search)"
             Using cmd As New SqlCommand(query, conn)
                 cmd.Parameters.AddWithValue("@Search", "%" & searchStr & "%")
                 Dim dt As New System.Data.DataTable()

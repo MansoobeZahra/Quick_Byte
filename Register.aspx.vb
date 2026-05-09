@@ -40,7 +40,7 @@ Partial Class Register
                 Dim newRefId As Integer = 0
 
                 If role = "Customer" Then
-                    Dim insertCust As String = "INSERT INTO Customer (FirstName, LastName, Email, PhoneNumber) OUTPUT INSERTED.CustomerID VALUES (@FirstName, @LastName, @Email, @Phone)"
+                    Dim insertCust As String = "INSERT INTO Customer_QB (FirstName, LastName, Email, PhoneNumber) OUTPUT INSERTED.CustomerID VALUES (@FirstName, @LastName, @Email, @Phone)"
                     Using cmd As New SqlCommand(insertCust, conn, transaction)
                         cmd.Parameters.AddWithValue("@FirstName", txtFirstName.Text.Trim())
                         cmd.Parameters.AddWithValue("@LastName", txtLastName.Text.Trim())
@@ -50,7 +50,7 @@ Partial Class Register
                     End Using
 
                 Else If role = "RestaurantManager" Then
-                    Dim insertRest As String = "INSERT INTO Restaurant (Name, Street, City, ContactNumber) OUTPUT INSERTED.RestaurantID VALUES (@Name, @Street, @City, @ContactNumber)"
+                    Dim insertRest As String = "INSERT INTO Restaurant_QB (Name, Street, City, ContactNumber) OUTPUT INSERTED.RestaurantID VALUES (@Name, @Street, @City, @ContactNumber)"
                     Using cmd As New SqlCommand(insertRest, conn, transaction)
                         cmd.Parameters.AddWithValue("@Name", txtRestaurantName.Text.Trim())
                         cmd.Parameters.AddWithValue("@Street", txtStreet.Text.Trim())
@@ -60,7 +60,7 @@ Partial Class Register
                     End Using
 
                 Else If role = "Rider" Then
-                    Dim insertRider As String = "INSERT INTO Rider (Name, ContactNumber, Availability) OUTPUT INSERTED.RiderID VALUES (@Name, @ContactNumber, @Availability)"
+                    Dim insertRider As String = "INSERT INTO Rider_QB (Name, ContactNumber, Availability) OUTPUT INSERTED.RiderID VALUES (@Name, @ContactNumber, @Availability)"
                     Using cmd As New SqlCommand(insertRider, conn, transaction)
                         cmd.Parameters.AddWithValue("@Name", txtFirstName.Text.Trim() & " " & txtLastName.Text.Trim())
                         cmd.Parameters.AddWithValue("@ContactNumber", phone)
