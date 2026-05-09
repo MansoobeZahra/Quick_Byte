@@ -153,7 +153,7 @@
                         </asp:TemplateField>
                         <asp:TemplateField HeaderText="Available">
                             <ItemTemplate>
-                                <span class='<%# "badge " & If(Convert.ToBoolean(Eval("Availability")), "badge-available", "badge-offline") %>'>
+                                <span class='<%# If(Convert.ToBoolean(Eval("Availability")), "badge badge-available", "badge badge-offline") %>'>
                                     <%# If(Convert.ToBoolean(Eval("Availability")), "Yes", "No") %>
                                 </span>
                             </ItemTemplate>
@@ -194,7 +194,7 @@
                         <asp:BoundField DataField="TargetType" HeaderText="Role" />
                         <asp:TemplateField HeaderText="Rating">
                             <ItemTemplate>
-                                <span class='<%# "badge " & If(Convert.ToInt32(Eval("Rating")) >= 4, "badge-high", "badge-low") %>'>
+                                <span class='<%# GetRatingClass(Eval("Rating")) %>'>
                                     <%# Eval("Rating") %> / 5
                                 </span>
                             </ItemTemplate>

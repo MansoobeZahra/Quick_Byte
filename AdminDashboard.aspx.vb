@@ -186,6 +186,13 @@ Partial Class AdminDashboard
         End Select
     End Function
 
+    Protected Function GetRatingClass(ByVal rating As Object) As String
+        If rating Is Nothing Then Return "badge badge-low"
+        Dim r As Integer = Convert.ToInt32(rating)
+        If r >= 4 Then Return "badge badge-high"
+        Return "badge badge-low"
+    End Function
+
     Protected Sub lnkLogout_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         FormsAuthentication.SignOut()
         Session.Clear()
