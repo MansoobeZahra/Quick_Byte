@@ -8,6 +8,7 @@ GO
 -- 1. STAKEHOLDER TABLES (Entity Tables)
 -- ==========================================
 
+-- 1. STAKEHOLDER TABLES (Entity Tables)
 -- Customers
 CREATE TABLE Customer_QB (
     CustomerID INT IDENTITY(2001,1) PRIMARY KEY,
@@ -15,7 +16,8 @@ CREATE TABLE Customer_QB (
     LastName NVARCHAR(50),
     Email NVARCHAR(100) UNIQUE,
     PhoneNumber NVARCHAR(20),
-    Segment NVARCHAR(50) DEFAULT 'Regular', -- For segmentation logic
+    Region NVARCHAR(50), -- Karachi, Lahore, Islamabad, Rawalpindi
+    Segment NVARCHAR(50) DEFAULT 'Regular',
     CreatedAt DATETIME DEFAULT GETDATE()
 );
 
@@ -25,8 +27,11 @@ CREATE TABLE Restaurant_QB (
     Name NVARCHAR(100),
     Street NVARCHAR(100),
     City NVARCHAR(50),
+    Region NVARCHAR(50), -- Karachi, Lahore, Islamabad, Rawalpindi
     ContactNumber NVARCHAR(20),
-    Segment NVARCHAR(50) DEFAULT 'Standard' -- For performance segmentation
+    Segment NVARCHAR(50) DEFAULT 'Standard',
+    IsActive BIT DEFAULT 1, -- Admin can disable
+    LastRevenueReset DATETIME DEFAULT GETDATE()
 );
 
 -- Riders
@@ -35,7 +40,10 @@ CREATE TABLE Rider_QB (
     Name NVARCHAR(100),
     ContactNumber NVARCHAR(20),
     Availability BIT DEFAULT 1,
-    Segment NVARCHAR(50) DEFAULT 'Standard'
+    IsActive BIT DEFAULT 1, -- Admin can disable
+    Region NVARCHAR(50), -- Karachi, Lahore, Islamabad, Rawalpindi
+    Segment NVARCHAR(50) DEFAULT 'Standard',
+    LastRevenueReset DATETIME DEFAULT GETDATE()
 );
 
 -- Platform Managers (Internal Admins)
@@ -55,7 +63,8 @@ CREATE TABLE Users_QB (
     Email NVARCHAR(100) UNIQUE NOT NULL,
     PasswordHash NVARCHAR(255) NOT NULL,
     Role NVARCHAR(50) NOT NULL, -- 'Customer', 'RestaurantManager', 'Rider', 'PlatformManager'
-    ReferenceID INT NULL -- Links to CustomerID, RestaurantID, RiderID, or ManagerID
+    ReferenceID INT NULL,
+    Region NVARCHAR(50) -- User's default region
 );
 
 -- ==========================================
@@ -78,9 +87,10 @@ CREATE TABLE Order_QB (
     OrderID INT IDENTITY(6001,1) PRIMARY KEY,
     CustomerID INT NOT NULL,
     RestaurantID INT NOT NULL,
-    RiderID INT NOT NULL,
+    RiderID INT NULL, -- Can be assigned later
     OrderDate DATETIME DEFAULT GETDATE(),
-    Status NVARCHAR(30) DEFAULT 'Pending',
+    Status NVARCHAR(30) DEFAULT 'Pending', -- Pending, Assigned, Picked Up, Delivered, Confirmed
+    Region NVARCHAR(50), -- Order region
     CONSTRAINT FK_Order_Customer FOREIGN KEY (CustomerID) REFERENCES Customer_QB(CustomerID),
     CONSTRAINT FK_Order_Restaurant FOREIGN KEY (RestaurantID) REFERENCES Restaurant_QB(RestaurantID),
     CONSTRAINT FK_Order_Rider FOREIGN KEY (RiderID) REFERENCES Rider_QB(RiderID)
