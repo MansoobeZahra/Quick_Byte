@@ -224,11 +224,10 @@
                 </div>
 
         </form>
-        <footer>
-    </body>
-    <p>&copy; 2026 QUICK byte - Taste the speed</p>
-    <p>Internet application development</p>
-    <p>Mansoob-e-Zahra</p>
-    </footer>
+            <footer>
+                <p>&copy; 2026 QUICK byte | Taste the speed</p>
+                <p>Internet application development</p>
+                <p>Mansoob-e-Zahra</p>
+            </footer>
 
     </html>
