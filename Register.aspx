@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration - QUICK byte</title>
-    <link rel="stylesheet" href="registration.css">
+    <link rel="stylesheet" href="index.css">
     <script type="text/javascript">
         function toggleFields() {
             var userType = document.getElementById('<%= ddlUserType.ClientID %>').value;
@@ -39,10 +39,11 @@
 <body>
     <form id="form1" runat="server">
         <div class="container">
-            <div class="form-wrapper">
-                <img src="assets/logo.png" alt="QuickByte Logo" class="brand-logo" />
-                <h1>QuickByte</h1>
-                <p class="subtitle">Taste the speed</p>
+            <div class="form-wrapper" style="max-width: 500px; margin: 0 auto; text-align: center;">
+                <img src="assets/logo.png" alt="QuickByte Logo" style="height: 60px; margin-bottom: 10px;" />
+                <h1>Create Account</h1>
+                <p class="subtitle">Join the QuickByte network</p>
+                <br />
 
                 <asp:Label ID="lblMessage" runat="server" ForeColor="Red" Visible="false" Font-Bold="true"></asp:Label>
 
