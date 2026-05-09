@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Management - QUICK byte</title>
-    <link rel="stylesheet" href="order-management.css">
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -74,7 +73,7 @@
             </div>
         </div>
         <footer>
-            <p>&copy; 2026 QUICK byte - Taste the speed</p>
+            <p>&copy; 2026 QUICK byte | Taste the speed</p>
             <p>Internet application development</p>
             <p>Mansoob-e-Zahra</p>
         </footer>
