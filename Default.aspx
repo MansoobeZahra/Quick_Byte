@@ -31,6 +31,7 @@
                         <% ElseIf Session("Role") = "Admin" Then %>
                             <li><a href="Search.aspx">Search</a></li>
                             <li><a href="Orders.aspx">All Orders</a></li>
+                            <li><a href="AdminDashboard.aspx">Admin Dashboard</a></li>
                         <% End If %>
                         <li><asp:LinkButton ID="lnkLogout" runat="server" OnClick="lnkLogout_Click">Logout</asp:LinkButton></li>
                         <li><b>Welcome, <%= User.Identity.Name %></b></li>

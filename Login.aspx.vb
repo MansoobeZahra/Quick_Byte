@@ -50,7 +50,7 @@ Partial Class Login
                             Case "Rider"
                                 Response.Redirect("RiderDashboard.aspx")
                             Case "Admin"
-                                Response.Redirect("Orders.aspx")
+                                Response.Redirect("AdminDashboard.aspx")
                             Case Else
                                 Response.Redirect("Default.aspx")
                         End Select
