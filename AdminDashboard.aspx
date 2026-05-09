@@ -8,66 +8,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Admin Dashboard - QUICK byte</title>
         <link rel="stylesheet" href="index.css">
-        <style>
-            .dashboard-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 20px;
-                margin-top: 20px;
-            }
-
-            .stat-card {
-                background: white;
-                padding: 20px;
-                border-radius: 10px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                border-top: 4px solid #ba1010;
-            }
-
-            .stat-card h2 {
-                color: #ba1010;
-                margin-bottom: 15px;
-                font-size: 1.2rem;
-                border-bottom: 1px solid #eee;
-                padding-bottom: 10px;
-            }
-
-            .admin-table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 0.9rem;
-            }
-
-            .admin-table th {
-                background: #fcf8ec;
-                text-align: left;
-                padding: 10px;
-                border-bottom: 2px solid #ba1010;
-            }
-
-            .admin-table td {
-                padding: 10px;
-                border-bottom: 1px solid #eee;
-            }
-
-            .segment-premium {
-                color: gold;
-                font-weight: bold;
-            }
-
-            .segment-regular {
-                color: #555;
-            }
-
-            .segment-bulk {
-                color: #ba1010;
-                font-weight: bold;
-            }
-
-            .full-width {
-                grid-column: 1 / -1;
-            }
-        </style>
     </head>
 
     <body>
@@ -189,8 +129,9 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Status">
                                         <ItemTemplate>
-                                            <span class='<%# If(Convert.ToBoolean(Eval("IsActive")), "status-active", "status-disabled") %>'>
-                                                <%# If(Convert.ToBoolean(Eval("IsActive")), "Active", "Disabled") %>
+                                            <span
+                                                class='<%# If(Convert.ToBoolean(Eval("IsActive")), "status-active", "status-disabled") %>'>
+                                                <%# If(Convert.ToBoolean(Eval("IsActive")), "Active" , "Disabled" ) %>
                                             </span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
@@ -231,8 +172,10 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Availability">
                                         <ItemTemplate>
-                                            <span class='<%# "badge " & If(Convert.ToBoolean(Eval("Availability")), "badge-available", "badge-offline") %>'>
-                                                <%# If(Convert.ToBoolean(Eval("Availability")), "Available", "Offline") %>
+                                            <span
+                                                class='<%# "badge " & If(Convert.ToBoolean(Eval("Availability")), "badge-available", "badge-offline") %>'>
+                                                <%# If(Convert.ToBoolean(Eval("Availability")), "Available" , "Offline"
+                                                    ) %>
                                             </span>
                                         </ItemTemplate>
                                     </asp:TemplateField>
@@ -262,7 +205,8 @@
                                     <asp:BoundField DataField="TargetType" HeaderText="Role" />
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
-                                            <span class='<%# "badge " & If(Convert.ToInt32(Eval("Rating")) >= 4, "badge-high", "badge-low") %>'>
+                                            <span
+                                                class='<%# "badge " & If(Convert.ToInt32(Eval("Rating")) >= 4, "badge-high", "badge-low") %>'>
                                                 <%# Eval("Rating") %> / 5
                                             </span>
                                         </ItemTemplate>
@@ -279,12 +223,12 @@
                     </div>
                 </div>
 
-                <footer>
-                    <p>&copy; 2026 QUICK byte - Taste the speed</p>
-                    <p>Internet application development</p>
-                    <p>Mansoob-e-Zahra</p>
-                </footer>
         </form>
+        <footer>
     </body>
+    <p>&copy; 2026 QUICK byte - Taste the speed</p>
+    <p>Internet application development</p>
+    <p>Mansoob-e-Zahra</p>
+    </footer>
 
     </html>
