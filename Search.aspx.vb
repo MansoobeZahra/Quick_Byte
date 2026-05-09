@@ -59,7 +59,7 @@ Partial Class Search
 
     Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         Dim searchStr As String = txtSearch.Text.Trim()
-        Dim region As String = If(Session("UserRegion") IsNot Nothing, Session("UserRegion").ToString(), "Islamabad")
+        Dim region As String = ddlRegion.SelectedValue
         
         Dim connString As String = ConfigurationManager.ConnectionStrings("FoodserviceDB").ConnectionString
         Using conn As New SqlConnection(connString)
