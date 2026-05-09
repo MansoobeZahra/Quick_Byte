@@ -17,7 +17,7 @@
                     <img src="assets/logo.png" alt="QuickByte Logo" style="height:40px;" /> QuickByte
                 </a>
                 <ul class="nav-menu">
-                    <li><a href="Default.aspx" class="active">Home</a></li>
+                    <li><a href="Default.aspx">Home</a></li>
                     
                     <% If User.Identity.IsAuthenticated Then %>
                         <% If Session("Role") = "Customer" Then %>
@@ -25,16 +25,16 @@
                             <li><a href="Orders.aspx">My Orders</a></li>
                         <% ElseIf Session("Role") = "RestaurantManager" Then %>
                             <li><a href="Menu.aspx">Manage Menu</a></li>
-                            <li><a href="Orders.aspx">Restaurant Orders</a></li>
+                            <li><a href="Orders.aspx">Orders</a></li>
                         <% ElseIf Session("Role") = "Rider" Then %>
-                            <li><a href="RiderDashboard.aspx">Rider Portal</a></li>
-                        <% ElseIf Session("Role") = "Admin" Then %>
+                            <li><a href="RiderDashboard.aspx">Dashboard</a></li>
+                        <% ElseIf Session("Role") = "Admin" Or Session("Role") = "PlatformManager" Then %>
                             <li><a href="Search.aspx">Search</a></li>
                             <li><a href="Orders.aspx">All Orders</a></li>
-                            <li><a href="AdminDashboard.aspx">Admin Dashboard</a></li>
+                            <li><a href="AdminDashboard.aspx">Segmentation Dashboard</a></li>
                         <% End If %>
                         <li><asp:LinkButton ID="lnkLogout" runat="server" OnClick="lnkLogout_Click">Logout</asp:LinkButton></li>
-                        <li><b>Welcome, <%= User.Identity.Name %></b></li>
+                        <li class="user-welcome"><b><%= Session("Role") %>: <%= User.Identity.Name %></b></li>
                     <% Else %>
                         <li><a href="Register.aspx">Register</a></li>
                         <li><a href="Login.aspx">Login</a></li>
@@ -83,6 +83,13 @@
                             <p>Manage restaurant menu items and pricing</p>
                             <a href="Menu.aspx" class="btn">Manage Menu</a>
                         </div>
+                        <% If User.Identity.IsAuthenticated AndAlso (Session("Role") = "Admin" Or Session("Role") = "PlatformManager") Then %>
+                        <div class="card" style="border-top: 4px solid #ba1010;">
+                            <h3>Segmentation Dashboard</h3>
+                            <p>View advanced stakeholder analytics and segmentation</p>
+                            <a href="AdminDashboard.aspx" class="btn">Open Dashboard</a>
+                        </div>
+                        <% End If %>
                     </div>
                 </section>
             </main>
