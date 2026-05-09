@@ -189,7 +189,7 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Status">
                                         <ItemTemplate>
-                                            <span style='<%# GetStatusStyle(Eval("IsActive")) %>'>
+                                            <span class='<%# If(Convert.ToBoolean(Eval("IsActive")), "status-active", "status-disabled") %>'>
                                                 <%# If(Convert.ToBoolean(Eval("IsActive")), "Active", "Disabled") %>
                                             </span>
                                         </ItemTemplate>
@@ -231,7 +231,7 @@
                                     </asp:TemplateField>
                                     <asp:TemplateField HeaderText="Availability">
                                         <ItemTemplate>
-                                            <span class="badge" style='<%# GetAvailabilityStyle(Eval("Availability")) %>'>
+                                            <span class='<%# "badge " & If(Convert.ToBoolean(Eval("Availability")), "badge-available", "badge-offline") %>'>
                                                 <%# If(Convert.ToBoolean(Eval("Availability")), "Available", "Offline") %>
                                             </span>
                                         </ItemTemplate>
@@ -262,7 +262,7 @@
                                     <asp:BoundField DataField="TargetType" HeaderText="Role" />
                                     <asp:TemplateField HeaderText="Rating">
                                         <ItemTemplate>
-                                            <span class="badge" style='<%# GetRatingStyle(Eval("Rating")) %>'>
+                                            <span class='<%# "badge " & If(Convert.ToInt32(Eval("Rating")) >= 4, "badge-high", "badge-low") %>'>
                                                 <%# Eval("Rating") %> / 5
                                             </span>
                                         </ItemTemplate>
