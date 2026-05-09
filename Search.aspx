@@ -75,7 +75,7 @@
                             <asp:BoundField DataField="RestaurantName" HeaderText="Restaurant" />
                             <asp:TemplateField HeaderText="Rating">
                                 <ItemTemplate>
-                                    <span style="color:#f8be2c; font-weight:bold;"><%# Eval("AvgRating", "{0:F1}") %> ⭐</span>
+                                    <span style="color:#f8be2c; font-weight:bold;"><%# Eval("AvgRating", "{0:F1}") %> ●</span>
                                 </ItemTemplate>
                             </asp:TemplateField>
                             <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="{0:C}" />
