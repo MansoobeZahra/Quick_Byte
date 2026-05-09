@@ -36,6 +36,7 @@
 
         <div class="container" style="max-width: 600px;">
             <div class="page-header">
+                <img src="assets/logo.png" alt="QuickByte Logo" class="hero-logo" />
                 <h1>Create Account</h1>
                 <p>Register as a Customer or Delivery Rider</p>
             </div>

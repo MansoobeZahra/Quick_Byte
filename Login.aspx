@@ -26,6 +26,7 @@
 
         <div class="container" style="max-width: 500px;">
             <div class="page-header">
+                <img src="assets/logo.png" alt="QuickByte Logo" class="hero-logo" />
                 <h1>Login</h1>
                 <p>Sign in to your QuickByte account</p>
             </div>
