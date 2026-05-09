@@ -309,6 +309,67 @@ footer {
     border-top: 5px solid #ba1010;
 }
 
+/* Shared UI Components */
+.form-input {
+    padding: 12px 15px;
+    border: 1px solid #ba1010;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.btn-add {
+    background: #ba1010;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-view {
+    background: #f8be2c;
+    color: #333;
+    border: 1px solid #333;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-reset {
+    background: #fff;
+    color: #ba1010;
+    border: 1px solid #ba1010;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-reset:hover {
+    background: #fffafa;
+}
+
+.btn-action {
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-container {
